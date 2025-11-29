@@ -1418,8 +1418,15 @@
                 active on WhatsApp for faster communication.
               </p>
 
-              <!-- TODO: replace FORM_ENDPOINT_HERE with your Formspree/Web3Forms endpoint -->
-              <form action="FORM_ENDPOINT_HERE" method="POST">
+              <!-- FormSubmit integration -->
+              <form action="https://formsubmit.co/webappseostudio@gmail.com" method="POST">
+                <!-- Disable captcha -->
+                <input type="hidden" name="_captcha" value="false">
+                <!-- Redirect to thank-you page -->
+                <input type="hidden" name="_next" value="https://webappseostudio.vercel.app/thank-you.html">
+                <!-- Email subject -->
+                <input type="hidden" name="_subject" value="New enquiry from WebApp SEO Studio">
+
                 <div class="field-row">
                   <div class="field-group">
                     <label for="name">Your name*</label>
