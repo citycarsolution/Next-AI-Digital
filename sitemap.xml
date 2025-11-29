@@ -1,24 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
+  <!-- Homepage -->
   <url>
-    <loc>https://wapappseostudio.netlify.app/</loc>
-    <priority>1.00</priority>
+    <loc>https://webappseostudio.vercel.app/</loc>
+    <lastmod>2025-11-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
   </url>
 
+  <!-- Thank-you page -->
   <url>
-    <loc>https://wapappseostudio.netlify.app/#services</loc>
-    <priority>0.90</priority>
-  </url>
-
-  <url>
-    <loc>https://wapappseostudio.netlify.app/#pricing</loc>
-    <priority>0.90</priority>
-  </url>
-
-  <url>
-    <loc>https://wapappseostudio.netlify.app/#contact</loc>
-    <priority>0.80</priority>
+    <loc>https://webappseostudio.vercel.app/thank-you.html</loc>
+    <lastmod>2025-11-29</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
   </url>
 
 </urlset>
