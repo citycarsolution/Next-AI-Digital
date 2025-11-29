@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>Thank You for Your Enquiry | WebApp SEO Studio – Mumbai</title>
@@ -9,21 +11,19 @@
 
   <!-- SEO Meta Tags -->
   <meta name="robots" content="noindex, nofollow">
-  <link rel="canonical" href="https://wapappseostudio.netlify.app/" />
+  <link rel="canonical" href="https://webappseostudio.vercel.app/thank-you.html" />
 
   <!-- Open Graph Tags -->
   <meta property="og:title" content="Thank You for Your Enquiry | WebApp SEO Studio">
   <meta property="og:description" content="We have received your enquiry and will contact you soon.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://wapappseostudio.netlify.app/thank-you.html">
-  <!-- <meta property="og:image" content="https://wapappseostudio.netlify.app/images/og-thank-you.jpg"> -->
+  <meta property="og:url" content="https://webappseostudio.vercel.app/thank-you.html">
   <meta property="og:site_name" content="WebApp SEO Studio">
 
   <!-- Twitter Card Tags -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Thank You for Your Enquiry | WebApp SEO Studio">
   <meta name="twitter:description" content="We have received your enquiry and will contact you soon.">
-  <!-- <meta name="twitter:image" content="https://wapappseostudio.netlify.app/images/twitter-thank-you.jpg"> -->
 
   <!-- Performance Tags -->
   <link rel="dns-prefetch" href="https://fonts.googleapis.com">
@@ -31,9 +31,6 @@
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
-
- 
-
 
   <!-- Structured Data -->
   <script type="application/ld+json">
@@ -45,7 +42,7 @@
     "publisher": {
       "@type": "LocalBusiness",
       "name": "WebApp SEO Studio",
-      "url": "https://wapappseostudio.netlify.app",
+      "url": "https://webappseostudio.vercel.app",
       "telephone": "+919082552031",
       "address": {
         "@type": "PostalAddress",
@@ -63,10 +60,23 @@
     }
   }
   </script>
-</head>
 
+  <!-- Google Analytics (same ID as main site) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-7BYV4CZN9Z"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-7BYV4CZN9Z');
 
-  
+    // Track thank-you page conversion
+    gtag('event', 'thank_you_page_view', {
+      'send_to': 'G-7BYV4CZN9Z',
+      'value': 1.0,
+      'currency': 'INR'
+    });
+  </script>
+
   <style>
     * {
       box-sizing: border-box;
@@ -120,6 +130,7 @@
       text-align: center;
       position: relative;
       overflow: hidden;
+      animation: fadeIn 0.5s ease-out;
     }
 
     .thank-you-box::before {
@@ -288,10 +299,6 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .thank-you-box {
-      animation: fadeIn 0.5s ease-out;
-    }
-
     /* Responsive */
     @media (max-width: 640px) {
       .thank-you-box {
@@ -357,21 +364,5 @@
       </div>
     </div>
   </div>
-
-  <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'GA_MEASUREMENT_ID');
-    
-    // Track thank you page conversion
-    gtag('event', 'conversion', {
-      'send_to': 'GA_MEASUREMENT_ID/thank-page',
-      'value': 1.0,
-      'currency': 'INR'
-    });
-  </script>
 </body>
 </html>
