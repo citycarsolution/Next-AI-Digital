@@ -3,15 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   
- <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-KZGLC16PSE"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-KZGLC16PSE');
-</script>
-
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KZGLC16PSE"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-KZGLC16PSE');
+  </script>
 
   <!-- Google Search Console Verification -->
   <meta name="google-site-verification" content="B8tQIWzdrCpsRkFUoJVaitW_Gaf-dFScyqz-d_xOmlA" />
@@ -29,7 +28,6 @@
   <meta property="og:description" content="WebApp SEO Studio builds high-converting websites, mobile apps and SEO campaigns for local and growing businesses in Mumbai and across India.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://webappseostudio.vercel.app/">
-  <!-- OG image: make sure this file exists or update the URL -->
   <meta property="og:image" content="https://webappseostudio.vercel.app/images/og-image.jpg">
   <meta property="og:site_name" content="WebApp SEO Studio">
   <meta property="og:locale" content="en_IN">
@@ -38,7 +36,6 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="WebApp SEO Studio | Website Design, Mobile Apps & SEO Services Mumbai">
   <meta name="twitter:description" content="WebApp SEO Studio builds high-converting websites, mobile apps and SEO campaigns for local and growing businesses in Mumbai and across India.">
-  <!-- Twitter image: make sure this file exists or update the URL -->
   <meta name="twitter:image" content="https://webappseostudio.vercel.app/images/twitter-image.jpg">
   <meta name="twitter:site" content="@webappseostudio">
   
@@ -96,25 +93,26 @@
     }
 
     :root {
-      --bg: #0cb3d9;
-      --bg-soft: #0b1020;
-      --card: #0f172a;
-      --accent: #3b82f6;
-      --accent-soft: rgba(59,130,246,0.15);
+      --bg: #020617;
+      --bg-soft: #030712;
+      --card: #0b1220;
+      --accent: #0ea5e9;
+      --accent-soft: rgba(14,165,233,0.16);
       --accent-strong: #2563eb;
       --text: #e5e7eb;
       --muted: #9ca3af;
-      --border: #1f2937;
+      --border: #111827;
       --danger: #ef4444;
       --success: #22c55e;
       --radius-xl: 18px;
-      --shadow-soft: 0 18px 40px rgba(15, 23, 42, 0.6);
+      --shadow-soft: 0 18px 40px rgba(15, 23, 42, 0.7);
       --max-width: 1120px;
     }
 
     body {
       font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      background: radial-gradient(circle at top, #111827 0, #020617 55%, #000 100%);
+      background:
+        radial-gradient(circle at top left, #0f172a 0, #020617 42%, #000 100%);
       color: var(--text);
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
@@ -148,9 +146,21 @@
       position: sticky;
       top: 0;
       z-index: 50;
-      backdrop-filter: blur(16px);
-      background: linear-gradient(to bottom, rgba(2,6,23,0.96), rgba(2,6,23,0.9), transparent);
-      border-bottom: 1px solid rgba(15,23,42,0.9);
+      backdrop-filter: blur(18px);
+      background: rgba(2, 6, 23, 0.96);
+      border-bottom: 1px solid rgba(15, 23, 42, 0.95);
+      box-shadow: 0 14px 32px rgba(15, 23, 42, 0.9);
+    }
+
+    header::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #0ea5e9, #2563eb, #facc15);
+      pointer-events: none;
     }
 
     .nav {
@@ -516,7 +526,7 @@
       max-width: 520px;
     }
 
-    /* SERVICES GRID */
+    /* GRIDS & CARDS */
     .grid-3 {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1539,7 +1549,7 @@
   </div>
 
   <script>
-    // Hero package tab switcher (simple, no backend needed)
+    // Hero package tab switcher
     const tabs = document.querySelectorAll(".package-tab");
     const boxes = document.querySelectorAll(".package-box");
 
