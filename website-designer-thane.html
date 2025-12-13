@@ -6,106 +6,166 @@
   <!-- Viewport -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Title & Meta -->
+  <!-- SEO -->
   <title>Website Designer in Thane | WebApp SEO Studio</title>
-  <meta name="description" content="Looking for a professional website designer in Thane? WebApp SEO Studio builds fast, mobile-friendly, SEO-ready websites that generate real leads. Call now." />
+  <meta name="description" content="Professional website designer in Thane. We build fast, mobile-friendly and SEO-optimized websites that generate calls and WhatsApp leads for local businesses in Thane." />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://webappseostudio.vercel.app/website-designer-thane.html" />
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="Website Designer in Thane | WebApp SEO Studio">
-  <meta property="og:description" content="Professional website designer in Thane for business, services & startups. Mobile-friendly, SEO-ready websites.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://webappseostudio.vercel.app/website-designer-thane.html">
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KZGLC16PSE"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-KZGLC16PSE');
+  </script>
 
   <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- Schema: Service -->
+  <!-- Schema -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "Service",
-    "serviceType": "Website Design",
-    "provider": {
-      "@type": "LocalBusiness",
-      "name": "WebApp SEO Studio",
-      "url": "https://webappseostudio.vercel.app",
-      "telephone": "+919082552031",
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Thane",
-        "addressRegion": "Maharashtra",
-        "addressCountry": "IN"
-      }
+    "@type": "LocalBusiness",
+    "name": "WebApp SEO Studio",
+    "url": "https://webappseostudio.vercel.app/",
+    "telephone": "+919082552031",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Thane",
+      "addressRegion": "Maharashtra",
+      "addressCountry": "IN"
     },
-    "areaServed": "Thane",
-    "description": "Professional website design services in Thane for local businesses and startups."
+    "areaServed": ["Thane", "Mumbai Metropolitan Region"],
+    "description": "Website designer in Thane offering business websites, landing pages and local SEO services."
   }
   </script>
 
   <style>
     body {
-      font-family: "Poppins", sans-serif;
       margin: 0;
-      background: linear-gradient(180deg,#ffe4ec,#ffd6e5,#f8c8dc);
-      color: #020617;
+      font-family: "Poppins", sans-serif;
+      background: radial-gradient(circle at top left,#0f172a,#020617,#000);
+      color: #e5e7eb;
       line-height: 1.6;
     }
-    header, footer {
-      background:#020617;
-      color:#e5e7eb;
-      padding:1rem 0;
+    a { color: inherit; text-decoration: none; }
+    .container { max-width: 1120px; margin: auto; padding: 0 1.25rem; }
+
+    header {
+      position: sticky;
+      top: 0;
+      background: rgba(2,6,23,0.95);
+      border-bottom: 1px solid #111827;
+      z-index: 50;
     }
-    .container {
-      max-width:1100px;
-      margin:auto;
-      padding:0 1rem;
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.9rem 0;
     }
-    h1,h2,h3 {
-      color:#020617;
-    }
-    .hero {
-      padding:3rem 0;
-    }
-    .hero h1 {
-      font-size:2.2rem;
-      margin-bottom:0.5rem;
-    }
-    .hero p {
-      max-width:700px;
-    }
-    .cta {
-      margin-top:1.2rem;
+    .logo {
+      font-weight: 600;
+      font-size: 1.1rem;
     }
     .btn {
-      display:inline-block;
-      padding:0.6rem 1.2rem;
-      border-radius:999px;
-      background:#2563eb;
-      color:#fff;
-      text-decoration:none;
-      font-size:0.9rem;
-      margin-right:0.5rem;
+      padding: 0.55rem 1.2rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      display: inline-block;
     }
-    section {
-      padding:2.5rem 0;
+    .btn-primary {
+      background: linear-gradient(135deg,#0ea5e9,#2563eb);
+      color: #fff;
     }
-    .card {
-      background:#ffffff;
-      border-radius:16px;
-      padding:1.2rem;
-      margin-bottom:1rem;
-      box-shadow:0 10px 30px rgba(0,0,0,0.1);
+    .btn-outline {
+      border: 1px solid #60a5fa;
+      color: #bfdbfe;
     }
-    ul {
-      padding-left:1.2rem;
+
+    /* HERO */
+    .hero {
+      padding: 4rem 0 3rem;
     }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 2rem;
+      align-items: center;
+    }
+    .badge {
+      display: inline-block;
+      background: rgba(56,189,248,0.15);
+      color: #7dd3fc;
+      padding: 0.3rem 0.8rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      margin-bottom: 0.8rem;
+    }
+    h1 {
+      font-size: 2.6rem;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+    h1 span {
+      color: #38bdf8;
+    }
+    .hero p {
+      color: #cbd5f5;
+      max-width: 520px;
+      margin-bottom: 1.4rem;
+    }
+    .hero-box {
+      background: #020617;
+      border-radius: 18px;
+      padding: 1.5rem;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    }
+    .hero-box ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .hero-box li {
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    section { padding: 3rem 0; }
+    h2 { font-size: 1.5rem; margin-bottom: 0.6rem; }
+    p.sub { color: #9ca3af; max-width: 520px; }
+
+    .pill-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin-top: 1rem;
+    }
+    .pill {
+      font-size: 0.75rem;
+      padding: 0.25rem 0.7rem;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(148,163,184,0.5);
+      color: #9ca3af;
+    }
+
     footer {
-      font-size:0.85rem;
-      text-align:center;
+      border-top: 1px solid #111827;
+      padding: 1.4rem 0;
+      text-align: center;
+      font-size: 0.8rem;
+      color: #9ca3af;
+    }
+
+    @media(max-width: 900px){
+      .hero-grid{grid-template-columns:1fr}
+      h1{font-size:2.1rem}
     }
   </style>
 </head>
@@ -113,8 +173,12 @@
 <body>
 
 <header>
-  <div class="container">
-    <strong>WebApp SEO Studio</strong> — Website Designer in Thane
+  <div class="container nav">
+    <div class="logo">WebApp SEO Studio</div>
+    <div>
+      <a class="btn btn-outline" href="/website-designer-mumbai.html">Mumbai</a>
+      <a class="btn btn-primary" href="https://wa.me/919082552031">WhatsApp</a>
+    </div>
   </div>
 </header>
 
@@ -122,117 +186,64 @@
 
   <!-- HERO -->
   <section class="hero">
-    <div class="container">
-      <h1>Website Designer in Thane for Business Growth</h1>
-      <p>
-        Need a professional website designer in Thane?  
-        WebApp SEO Studio creates modern, mobile-friendly, SEO-ready websites that
-        help local businesses get calls, WhatsApp enquiries and real customers.
-      </p>
-      <div class="cta">
-        <a class="btn" href="tel:+919082552031">Call Now</a>
-        <a class="btn" href="https://wa.me/919082552031" target="_blank">WhatsApp</a>
+    <div class="container hero-grid">
+      <div>
+        <span class="badge">Website Designer in Thane</span>
+        <h1>Grow Your Business with a <span>Website Designer in Thane</span></h1>
+        <p>
+          We design fast, modern and SEO-optimized websites for Thane-based businesses.
+          Our websites are built to generate calls, WhatsApp enquiries and real customers.
+        </p>
+        <a class="btn btn-primary" href="tel:+919082552031">📞 Call Now</a>
+        <a class="btn btn-outline" href="https://wa.me/919082552031">💬 WhatsApp</a>
       </div>
-    </div>
-  </section>
 
-  <!-- WHY CHOOSE -->
-  <section>
-    <div class="container">
-      <h2>Why Choose Us as Your Website Designer in Thane?</h2>
-
-      <div class="card">
+      <div class="hero-box">
+        <h3>What You Get</h3>
         <ul>
-          <li>Mobile-friendly & fast-loading website design</li>
-          <li>SEO-optimized structure for Google ranking</li>
-          <li>Business-focused layout (calls & leads)</li>
-          <li>Clear pricing, no hidden charges</li>
-          <li>1-year free technical support</li>
+          <li>✔ Premium mobile-friendly design</li>
+          <li>✔ Local SEO setup for Thane</li>
+          <li>✔ Fast loading & secure website</li>
+          <li>✔ 1 year free support</li>
         </ul>
       </div>
     </div>
   </section>
 
-  <!-- SERVICES -->
+  <!-- AREAS -->
   <section>
     <div class="container">
-      <h2>Website Design Services in Thane</h2>
+      <h2>Serving All Major Areas of Thane</h2>
+      <p class="sub">We work with businesses across Thane and nearby locations.</p>
 
-      <div class="card">
-        <h3>Business Website Design</h3>
-        <p>
-          Professional websites for shops, clinics, consultants,
-          service providers and startups in Thane.
-        </p>
+      <div class="pill-grid">
+        <span class="pill">Ghodbunder Road</span>
+        <span class="pill">Manpada</span>
+        <span class="pill">Majiwada</span>
+        <span class="pill">Vartak Nagar</span>
+        <span class="pill">Kalwa</span>
+        <span class="pill">Kopri</span>
+        <span class="pill">Wagle Estate</span>
+        <span class="pill">Hiranandani Estate</span>
       </div>
-
-      <div class="card">
-        <h3>Landing Pages for Ads & SEO</h3>
-        <p>
-          High-conversion landing pages for Google Ads, Facebook Ads and
-          local SEO campaigns.
-        </p>
-      </div>
-
-      <div class="card">
-        <h3>Web Applications</h3>
-        <p>
-          Booking systems, dashboards and custom web apps for growing
-          Thane-based businesses.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- LOCAL SEO -->
-  <section>
-    <div class="container">
-      <h2>Local SEO Ready Website for Thane</h2>
-      <div class="card">
-        <ul>
-          <li>Optimized titles & meta descriptions</li>
-          <li>City-based keyword targeting (Thane)</li>
-          <li>Google Business Profile support</li>
-          <li>Fast performance on mobile & desktop</li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- INTERNAL LINKS -->
-  <section>
-    <div class="container">
-      <p>
-        Also serving nearby locations:
-        <a href="/website-designer-mumbai.html">Mumbai</a> |
-        <a href="/website-designer-navi-mumbai.html">Navi Mumbai</a> |
-        <a href="/website-designer-pune.html">Pune</a>
-      </p>
     </div>
   </section>
 
   <!-- CTA -->
   <section>
     <div class="container">
-      <h2>Get Your Website Designed in Thane</h2>
-      <p>
-        Looking for a reliable website designer in Thane who understands
-        business and SEO? Let’s talk.
+      <h2>Looking for a Website Designer in Thane?</h2>
+      <p class="sub">
+        If you want a professional website that actually brings leads, let’s talk today.
       </p>
-      <div class="cta">
-        <a class="btn" href="tel:+919082552031">Call +91 90825 52031</a>
-        <a class="btn" href="/#contact">Request a Quote</a>
-      </div>
+      <a class="btn btn-primary" href="tel:+919082552031">Call +91 90825 52031</a>
     </div>
   </section>
 
 </main>
 
 <footer>
-  <div class="container">
-    © <script>document.write(new Date().getFullYear())</script>
-    WebApp SEO Studio · Thane
-  </div>
+  © <script>document.write(new Date().getFullYear())</script> WebApp SEO Studio · Thane
 </footer>
 
 </body>
