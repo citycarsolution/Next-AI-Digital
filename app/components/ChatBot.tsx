@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 
 export default function ChatBot() {
+
   const [open, setOpen] =
     useState(true);
 
@@ -10,7 +11,8 @@ export default function ChatBot() {
     useState([
       {
         role: "bot",
-        text: "Welcome 👋 How can I help you?",
+        text:
+          "Welcome 👋 How can I help you?",
       },
     ]);
 
@@ -27,95 +29,132 @@ export default function ChatBot() {
 
   // 🔥 LOAD VOICES
   useEffect(() => {
+
     const synth =
       window.speechSynthesis;
 
-    const loadVoices = () => {
-      setVoices(
-        synth.getVoices()
-      );
-    };
+    const loadVoices =
+      () => {
+
+        setVoices(
+          synth.getVoices()
+        );
+      };
 
     loadVoices();
 
     speechSynthesis.onvoiceschanged =
       loadVoices;
+
   }, []);
 
   // 🔥 AUTO WELCOME
   useEffect(() => {
-    if (voices.length > 0) {
+
+    if (
+      voices.length > 0
+    ) {
+
       setTimeout(() => {
+
         speak(
           "Welcome to Next AI Digital. How can I help you today?"
         );
+
       }, 1000);
     }
+
   }, [voices]);
 
   // 🔊 PREMIUM VOICE
   const speak = (
     text: string
   ) => {
+
     const synth =
       window.speechSynthesis;
 
     if (!synth) return;
 
+    // 🔥 STOP OLD VOICE
     synth.cancel();
 
     // 🔥 CLEAN TEXT
-    const cleanText = text
-      .replace(/\*\*/g, "")
-      .replace(/\*/g, "")
-      .replace(/#/g, "")
-      .replace(/```/g, "")
-      .replace(/`/g, "")
-      .replace(/\n/g, " ")
-      .trim();
+    const cleanText =
+      text
+        .replace(/\*\*/g, "")
+        .replace(/\*/g, "")
+        .replace(/#/g, "")
+        .replace(/```/g, "")
+        .replace(/`/g, "")
+        .replace(/\n/g, " ")
+        .trim();
 
     const utter =
       new SpeechSynthesisUtterance(
         cleanText
       );
 
+    // 🔥 LANGUAGE DETECT
     const isHindi =
-      /[ऀ-ॿ]/.test(cleanText);
+      /[ऀ-ॿ]/.test(
+        cleanText
+      );
 
     let voice;
 
     if (isHindi) {
+
       voice =
         voices.find(
           (v) =>
-            v.lang === "hi-IN"
+            v.lang.includes(
+              "hi"
+            )
         ) || voices[0];
+
     } else {
+
       voice =
-        voices.find((v) =>
-          v.name.includes(
-            "Google UK English Female"
-          )
+        voices.find(
+          (v) =>
+            v.name.includes(
+              "Google UK English Female"
+            )
         ) ||
-        voices.find((v) =>
-          v.name.includes(
-            "Microsoft Zira"
-          )
+
+        voices.find(
+          (v) =>
+            v.name.includes(
+              "Microsoft Zira"
+            )
         ) ||
+
         voices[0];
     }
 
     if (voice) {
-      utter.voice = voice;
-      utter.lang = voice.lang;
+
+      utter.voice =
+        voice;
+
+      utter.lang =
+        voice.lang;
     }
 
-    utter.rate = 0.92;
-    utter.pitch = 1.08;
+    // 🔥 PREMIUM MOBILE SETTINGS
+    utter.rate = 0.88;
+
+    utter.pitch = 1;
+
     utter.volume = 1;
 
     setTimeout(() => {
-      synth.speak(utter);
+
+      synth.speak(
+        utter
+      );
+
     }, 150);
   };
 
@@ -124,10 +163,14 @@ export default function ChatBot() {
     async (
       customText?: string
     ) => {
-      const msg =
-        customText || input;
 
-      if (!msg.trim()) return;
+      const msg =
+        customText ||
+        input;
+
+      if (
+        !msg.trim()
+      ) return;
 
       const userMsg = {
         role: "user",
@@ -139,29 +182,36 @@ export default function ChatBot() {
         userMsg,
       ];
 
-      setMessages(newMessages);
+      setMessages(
+        newMessages
+      );
 
       setInput("");
 
       setLoading(true);
 
       try {
+
         const res =
           await fetch(
             "/api/chat",
             {
-              method: "POST",
+              method:
+                "POST",
 
               headers: {
                 "Content-Type":
                   "application/json",
               },
 
-              body: JSON.stringify({
-                message: msg,
-                messages:
-                  newMessages,
-              }),
+              body:
+                JSON.stringify({
+                  message:
+                    msg,
+
+                  messages:
+                    newMessages,
+                }),
             }
           );
 
@@ -182,15 +232,17 @@ export default function ChatBot() {
           botMsg,
         ]);
 
+        // 🔥 SPEAK AI
         speak(reply);
 
       } catch {
+
         setMessages([
           ...newMessages,
           {
             role: "bot",
             text:
-              "⚠️ AI server busy.",
+              "⚠️ AI server busy 😔",
           },
         ]);
       }
@@ -198,46 +250,111 @@ export default function ChatBot() {
       setLoading(false);
     };
 
-  // 🎤 MIC
-  const startListening = () => {
-    const SpeechRecognition =
-      (window as any)
-        .SpeechRecognition ||
-      (window as any)
-        .webkitSpeechRecognition;
+  // 🎤 PREMIUM MOBILE MIC
+  const startListening =
+    () => {
 
-    if (!SpeechRecognition) {
-      alert(
-        "Use Chrome Browser"
-      );
+      const SpeechRecognition =
+        (window as any)
+          .SpeechRecognition ||
 
-      return;
-    }
+        (window as any)
+          .webkitSpeechRecognition;
 
-    const recognition =
-      new SpeechRecognition();
+      if (
+        !SpeechRecognition
+      ) {
 
-    recognition.lang =
-      "hi-IN";
+        alert(
+          "Please use Chrome Browser 😄"
+        );
 
-    recognition.interimResults =
-      false;
+        return;
+      }
 
-    recognition.onresult = (
-      event: any
-    ) => {
-      const text =
-        event.results[0][0]
-          .transcript;
+      const recognition =
+        new SpeechRecognition();
 
-      sendMessage(text);
+      // 🔥 BEST LANGUAGE
+      recognition.lang =
+        "hi-IN";
+
+      recognition.continuous =
+        false;
+
+      recognition.interimResults =
+        false;
+
+      recognition.maxAlternatives =
+        1;
+
+      recognition.start();
+
+      setLoading(true);
+
+      recognition.onstart =
+        () => {
+
+          console.log(
+            "🎤 Listening..."
+          );
+        };
+
+      recognition.onresult =
+        async (
+          event: any
+        ) => {
+
+          const text =
+            event.results[0][0]
+              .transcript;
+
+          console.log(
+            "USER:",
+            text
+          );
+
+          // 🔥 AUTO SEND
+          await sendMessage(
+            text
+          );
+        };
+
+      recognition.onerror =
+        (
+          event: any
+        ) => {
+
+          console.log(
+            "VOICE ERROR:",
+            event.error
+          );
+
+          setLoading(
+            false
+          );
+
+          speak(
+            "Sorry 😔 Voice clear nahi aayi. Please dubara boliye."
+          );
+        };
+
+      recognition.onend =
+        () => {
+
+          setLoading(
+            false
+          );
+
+          console.log(
+            "🎤 Voice Ended"
+          );
+        };
     };
-
-    recognition.start();
-  };
 
   return (
     <>
+
       {/* FLOAT BUTTON */}
       <button
         onClick={() =>
@@ -251,7 +368,7 @@ export default function ChatBot() {
           from-blue-500
           to-purple-500
           text-white
-          px-2
+          px-4
           py-3
           rounded-full
           shadow-2xl
@@ -266,6 +383,7 @@ export default function ChatBot() {
 
       {/* CHAT */}
       {open && (
+
         <div
           className="
             fixed
@@ -285,6 +403,7 @@ export default function ChatBot() {
             z-50
           "
         >
+
           {/* HEADER */}
           <div
             className="
@@ -299,7 +418,9 @@ export default function ChatBot() {
               justify-between
             "
           >
+
             <div>
+
               <h2 className="text-white font-bold text-lg">
                 Next AI Digital 🤖
               </h2>
@@ -307,6 +428,7 @@ export default function ChatBot() {
               <p className="text-green-400 text-xs">
                 ● AI Consultant
               </p>
+
             </div>
 
             <button
@@ -317,6 +439,7 @@ export default function ChatBot() {
             >
               ✕
             </button>
+
           </div>
 
           {/* MESSAGES */}
@@ -329,39 +452,52 @@ export default function ChatBot() {
               bg-[#020617]
             "
           >
+
             {messages.map(
-              (m: any, i) => (
+              (
+                m: any,
+                i
+              ) => (
+
                 <div
                   key={i}
                   className={`flex ${
-                    m.role === "user"
+                    m.role ===
+                    "user"
                       ? "justify-end"
                       : "justify-start"
                   }`}
                 >
+
                   <div
                     className={`px-4 py-3 rounded-2xl max-w-[85%] text-sm transition-all duration-300 ${
-                      m.role === "user"
+                      m.role ===
+                      "user"
                         ? "bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-br-md"
                         : "bg-white/10 text-white rounded-bl-md border border-blue-500/20"
                     }`}
                   >
                     {m.text}
                   </div>
+
                 </div>
               )
             )}
 
             {/* LOADING */}
             {loading && (
+
               <div className="flex gap-1">
+
                 <span className="w-2 h-2 bg-white rounded-full animate-bounce"></span>
 
                 <span className="w-2 h-2 bg-white rounded-full animate-bounce delay-100"></span>
 
                 <span className="w-2 h-2 bg-white rounded-full animate-bounce delay-200"></span>
+
               </div>
             )}
+
           </div>
 
           {/* INPUT */}
@@ -373,6 +509,7 @@ export default function ChatBot() {
               bg-[#0f172a]
             "
           >
+
             <input
               value={input}
               onChange={(e) =>
@@ -380,10 +517,15 @@ export default function ChatBot() {
                   e.target.value
                 )
               }
-              onKeyDown={(e) => {
+              onKeyDown={(
+                e
+              ) => {
+
                 if (
-                  e.key === "Enter"
+                  e.key ===
+                  "Enter"
                 ) {
+
                   sendMessage();
                 }
               }}
@@ -451,6 +593,7 @@ export default function ChatBot() {
             >
               Talk on WhatsApp 🚀
             </a>
+
           </div>
         </div>
       )}
