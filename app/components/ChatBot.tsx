@@ -22,141 +22,204 @@ export default function ChatBot() {
   const [loading, setLoading] =
     useState(false);
 
-  const [voices, setVoices] =
-    useState<
-      SpeechSynthesisVoice[]
-    >([]);
+  const [isMobile, setIsMobile] =
+    useState(false);
 
-  // 🔥 LOAD VOICES
+  // 🔥 MOBILE DETECT
   useEffect(() => {
 
-    const synth =
-      window.speechSynthesis;
-
-    const loadVoices =
+    const checkMobile =
       () => {
 
-        setVoices(
-          synth.getVoices()
+        setIsMobile(
+          window.innerWidth <=
+            768
         );
       };
 
-    loadVoices();
+    checkMobile();
 
-    speechSynthesis.onvoiceschanged =
-      loadVoices;
+    window.addEventListener(
+      "resize",
+      checkMobile
+    );
+
+    return () =>
+      window.removeEventListener(
+        "resize",
+        checkMobile
+      );
 
   }, []);
+
+  // 🔥 PREMIUM VOICE
+  const speak = async (
+    text: string
+  ) => {
+
+    try {
+
+      const cleanText =
+        text
+          .replace(/\*\*/g, "")
+          .replace(/\*/g, "")
+          .replace(/#/g, "")
+          .replace(/```/g, "")
+          .replace(/`/g, "")
+          .replace(/\n/g, " ")
+          .replace(
+            /[🚀😍🔥💡📱💰🎯]/g,
+            ""
+          )
+          .trim();
+
+      const res =
+        await fetch(
+          "/api/voice",
+          {
+            method:
+              "POST",
+
+            headers: {
+              "Content-Type":
+                "application/json",
+            },
+
+            body:
+              JSON.stringify({
+                text:
+                  cleanText,
+              }),
+          }
+        );
+
+      if (!res.ok) {
+
+        console.log(
+          "VOICE API FAILED"
+        );
+
+        return;
+      }
+
+      const audioBlob =
+        await res.blob();
+
+      const audioUrl =
+        URL.createObjectURL(
+          audioBlob
+        );
+
+      const audio =
+        new Audio(
+          audioUrl
+        );
+
+      audio.volume = 1;
+
+      audio.muted = false;
+
+      try {
+
+        await audio.play();
+
+        console.log(
+          "VOICE PLAYING 😍"
+        );
+
+      } catch (err) {
+
+        console.log(
+          "AUDIO PLAY ERROR:",
+          err
+        );
+      }
+
+    } catch (
+      error
+    ) {
+
+      console.log(
+        "VOICE ERROR:",
+        error
+      );
+    }
+  };
 
   // 🔥 AUTO WELCOME
   useEffect(() => {
 
-    if (
-      voices.length > 0
-    ) {
+    let welcomed = false;
 
-      setTimeout(() => {
+    const startWelcome =
+      async () => {
 
-        speak(
-          "Welcome to Next AI Digital. How can I help you today?"
-        );
+        if (welcomed)
+          return;
 
-      }, 1000);
-    }
+        welcomed = true;
 
-  }, [voices]);
+        try {
 
-  // 🔊 PREMIUM VOICE
-  const speak = (
-    text: string
-  ) => {
+          setTimeout(() => {
 
-    const synth =
-      window.speechSynthesis;
+            speak(
+              "Welcome to Next AI Digital. How can I help you today?"
+            );
 
-    if (!synth) return;
+          }, 1200);
 
-    // 🔥 STOP OLD VOICE
-    synth.cancel();
+        } catch (
+          error
+        ) {
 
-    // 🔥 CLEAN TEXT
-    const cleanText =
-      text
-        .replace(/\*\*/g, "")
-        .replace(/\*/g, "")
-        .replace(/#/g, "")
-        .replace(/```/g, "")
-        .replace(/`/g, "")
-        .replace(/\n/g, " ")
-        .trim();
+          console.log(
+            "WELCOME ERROR:",
+            error
+          );
+        }
+      };
 
-    const utter =
-      new SpeechSynthesisUtterance(
-        cleanText
+    // 🔥 MOBILE
+    document.addEventListener(
+      "touchstart",
+      startWelcome,
+      { once: true }
+    );
+
+    // 🔥 DESKTOP
+    document.addEventListener(
+      "mousemove",
+      startWelcome,
+      { once: true }
+    );
+
+    // 🔥 CLICK
+    document.addEventListener(
+      "click",
+      startWelcome,
+      { once: true }
+    );
+
+    return () => {
+
+      document.removeEventListener(
+        "touchstart",
+        startWelcome
       );
 
-    // 🔥 LANGUAGE DETECT
-    const isHindi =
-      /[ऀ-ॿ]/.test(
-        cleanText
+      document.removeEventListener(
+        "mousemove",
+        startWelcome
       );
 
-    let voice;
-
-    if (isHindi) {
-
-      voice =
-        voices.find(
-          (v) =>
-            v.lang.includes(
-              "hi"
-            )
-        ) || voices[0];
-
-    } else {
-
-      voice =
-        voices.find(
-          (v) =>
-            v.name.includes(
-              "Google UK English Female"
-            )
-        ) ||
-
-        voices.find(
-          (v) =>
-            v.name.includes(
-              "Microsoft Zira"
-            )
-        ) ||
-
-        voices[0];
-    }
-
-    if (voice) {
-
-      utter.voice =
-        voice;
-
-      utter.lang =
-        voice.lang;
-    }
-
-    // 🔥 PREMIUM MOBILE SETTINGS
-    utter.rate = 0.88;
-
-    utter.pitch = 1;
-
-    utter.volume = 1;
-
-    setTimeout(() => {
-
-      synth.speak(
-        utter
+      document.removeEventListener(
+        "click",
+        startWelcome
       );
+    };
 
-    }, 150);
-  };
+  }, []);
 
   // 💬 SEND MESSAGE
   const sendMessage =
@@ -201,7 +264,7 @@ export default function ChatBot() {
 
               headers: {
                 "Content-Type":
-                "application/json",
+                  "application/json",
               },
 
               body:
@@ -232,8 +295,14 @@ export default function ChatBot() {
           botMsg,
         ]);
 
-        // 🔥 SPEAK AI
-        speak(reply);
+        // 🔥 VOICE REPLY
+        setTimeout(() => {
+
+          speak(
+            reply
+          );
+
+        }, 400);
 
       } catch {
 
@@ -250,15 +319,19 @@ export default function ChatBot() {
       setLoading(false);
     };
 
-  // 🎤 PREMIUM MOBILE MIC
+  // 🎤 VOICE INPUT
   const startListening =
     () => {
 
       const SpeechRecognition =
-        (window as any)
+        (
+          window as any
+        )
           .SpeechRecognition ||
 
-        (window as any)
+        (
+          window as any
+        )
           .webkitSpeechRecognition;
 
       if (
@@ -275,9 +348,9 @@ export default function ChatBot() {
       const recognition =
         new SpeechRecognition();
 
-      // 🔥 BEST LANGUAGE
       recognition.lang =
-        "hi-IN";
+        navigator.language ||
+        "en-US";
 
       recognition.continuous =
         false;
@@ -314,7 +387,6 @@ export default function ChatBot() {
             text
           );
 
-          // 🔥 AUTO SEND
           await sendMessage(
             text
           );
@@ -335,7 +407,7 @@ export default function ChatBot() {
           );
 
           speak(
-            "Sorry 😔 Voice clear nahi aayi. Please dubara boliye."
+            "Sorry, please try again."
           );
         };
 
@@ -360,37 +432,35 @@ export default function ChatBot() {
         onClick={() =>
           setOpen(!open)
         }
-        className="
+        className={`
           fixed
-          bottom-6
-          right-6
+          z-50
           bg-gradient-to-r
           from-blue-500
           to-purple-500
           text-white
-          px-4
-          py-3
           rounded-full
           shadow-2xl
-          z-50
           hover:scale-105
           transition-all
           animate-pulse
-        "
+          ${
+            isMobile
+              ? "bottom-4 right-4 p-3 text-lg"
+              : "bottom-6 right-6 p-4 text-xl"
+          }
+        `}
       >
         💬
       </button>
 
-      {/* CHAT */}
+      {/* CHAT BOX */}
       {open && (
 
         <div
-          className="
+          className={`
             fixed
-            bottom-20
-            right-6
-            w-[340px]
-            h-[520px]
+            z-50
             bg-[#0f172a]/95
             backdrop-blur-xl
             border
@@ -400,8 +470,12 @@ export default function ChatBot() {
             flex
             flex-col
             overflow-hidden
-            z-50
-          "
+            ${
+              isMobile
+                ? "bottom-16 right-3 left-3 h-[70vh]"
+                : "bottom-20 right-6 w-[380px] h-[550px]"
+            }
+          `}
         >
 
           {/* HEADER */}
@@ -435,7 +509,7 @@ export default function ChatBot() {
               onClick={() =>
                 setOpen(false)
               }
-              className="text-white"
+              className="text-white text-lg"
             >
               ✕
             </button>
@@ -470,7 +544,7 @@ export default function ChatBot() {
                 >
 
                   <div
-                    className={`px-4 py-3 rounded-2xl max-w-[85%] text-sm transition-all duration-300 ${
+                    className={`px-4 py-3 rounded-2xl text-sm max-w-[85%] whitespace-pre-wrap ${
                       m.role ===
                       "user"
                         ? "bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-br-md"
@@ -540,44 +614,52 @@ export default function ChatBot() {
                 outline-none
                 border
                 border-white/10
+                focus:border-blue-500
               "
             />
 
-            {/* SEND */}
-            <button
-              onClick={() =>
-                sendMessage()
-              }
-              className="
-                w-full
-                bg-gradient-to-r
-                from-blue-500
-                to-purple-500
-                py-3
-                rounded-xl
-                text-white
-                font-semibold
-              "
-            >
-              Send 🚀
-            </button>
+            {/* BUTTONS */}
+            <div className="flex gap-2">
 
-            {/* MIC */}
-            <button
-              onClick={
-                startListening
-              }
-              className="
-                w-full
-                mt-2
-                bg-black/40
-                py-3
-                rounded-xl
-                text-white
-              "
-            >
-              🎤 Speak
-            </button>
+              <button
+                onClick={() =>
+                  sendMessage()
+                }
+                className="
+                  flex-1
+                  bg-gradient-to-r
+                  from-blue-500
+                  to-purple-500
+                  py-3
+                  rounded-xl
+                  text-white
+                  font-semibold
+                  hover:scale-[1.02]
+                  transition-all
+                "
+              >
+                Send 🚀
+              </button>
+
+              <button
+                onClick={
+                  startListening
+                }
+                className="
+                  flex-1
+                  bg-black/40
+                  py-3
+                  rounded-xl
+                  text-white
+                  border
+                  border-white/10
+                  hover:border-blue-500/50
+                "
+              >
+                🎤 Speak
+              </button>
+
+            </div>
 
             {/* WHATSAPP */}
             <a
@@ -589,14 +671,17 @@ export default function ChatBot() {
                 mt-3
                 text-green-400
                 text-sm
+                hover:text-green-300
               "
             >
               Talk on WhatsApp 🚀
             </a>
 
           </div>
+
         </div>
       )}
+
     </>
   );
 }

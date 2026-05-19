@@ -52,10 +52,6 @@ export default function Hero() {
             WhatsApp Now
           </a>
 
-          <button className="bg-white text-black px-6 py-3 rounded-xl font-semibold hover:bg-gray-200 shadow-lg hover:scale-105">
-            Get Free Demo
-          </button>
-
         </div>
 
       </div>
