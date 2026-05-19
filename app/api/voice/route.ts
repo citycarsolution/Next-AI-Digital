@@ -54,13 +54,17 @@ export async function POST(req: Request) {
     return new Response(
       response.body,
       {
+        
         headers: {
-          "Content-Type":
-            "audio/mpeg",
+  "Content-Type":
+    "audio/mpeg",
 
-          "Transfer-Encoding":
-            "chunked",
-        },
+  "Transfer-Encoding":
+    "chunked",
+
+  "Cache-Control":
+    "no-cache",
+},
       }
     );
 

@@ -201,7 +201,7 @@ export default function ChatBot() {
 
               headers: {
                 "Content-Type":
-                  "application/json",
+                "application/json",
               },
 
               body:
