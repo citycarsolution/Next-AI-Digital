@@ -9,32 +9,23 @@ export async function POST(
     const body =
       await req.json();
 
+    // 🔥 TELEGRAM MESSAGE
     const message =
-      `
-🔥 NEW CLIENT LEAD
+`
+🔥 NEW AI LEAD
 
-👤 Name:
-${body.name}
+👤 CLIENT MESSAGE:
+${body.message}
 
-📱 Phone:
-${body.phone}
-
-🌆 City:
-${body.city}
-
-💼 Business:
-${body.business}
-
-💰 Budget:
-${body.budget}
-
-🧠 Requirement:
-${body.requirement}
+🤖 AI REPLY:
+${body.aiReply}
 `;
 
+    // 🔥 TELEGRAM API URL
     const telegramUrl =
-      `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`;
+`https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`;
 
+    // 🔥 SEND MESSAGE
     await fetch(
       telegramUrl,
       {
@@ -56,6 +47,10 @@ ${body.requirement}
       }
     );
 
+    console.log(
+      "✅ TELEGRAM LEAD SENT"
+    );
+
     return NextResponse.json({
       success: true,
     });
@@ -65,6 +60,7 @@ ${body.requirement}
   ) {
 
     console.log(
+      "❌ TELEGRAM ERROR:",
       error
     );
 

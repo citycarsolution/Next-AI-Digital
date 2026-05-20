@@ -64,19 +64,61 @@ export default function ChatBot() {
 
     try {
 
-      const cleanText =
-        text
-          .replace(/\*\*/g, "")
-          .replace(/\*/g, "")
-          .replace(/#/g, "")
-          .replace(/```/g, "")
-          .replace(/`/g, "")
-          .replace(/\n/g, " ")
-          .replace(
-            /[🚀😍🔥💡📱💰🎯]/g,
-            ""
-          )
-          .trim();
+  const cleanText =
+    text
+
+      // 🔥 REMOVE MARKDOWN
+      .replace(/\*\*/g, "")
+      .replace(/\*/g, "")
+      .replace(/#/g, "")
+      .replace(/```/g, "")
+      .replace(/`/g, "")
+
+      // 🔥 REMOVE EMOJIS
+      .replace(
+        /[\u{1F600}-\u{1F64F}]/gu,
+        ""
+      )
+
+      .replace(
+        /[\u{1F300}-\u{1F5FF}]/gu,
+        ""
+      )
+
+      .replace(
+        /[\u{1F680}-\u{1F6FF}]/gu,
+        ""
+      )
+
+      .replace(
+        /[\u{2600}-\u{26FF}]/gu,
+        ""
+      )
+
+      .replace(
+        /[\u{2700}-\u{27BF}]/gu,
+        ""
+      )
+
+      // 🔥 REMOVE INVALID UTF
+      .replace(
+        /[\uD800-\uDFFF]/g,
+        ""
+      )
+
+      // 🔥 CLEAN EXTRA SYMBOLS
+      .replace(
+        /[^\x00-\x7F\u0900-\u097F\s.,!?₹()-]/g,
+        ""
+      )
+
+      // 🔥 REMOVE NEWLINES
+      .replace(/\n/g, " ")
+
+      // 🔥 REMOVE EXTRA SPACES
+      .replace(/\s+/g, " ")
+
+      .trim();
 
       const res =
         await fetch(
@@ -310,6 +352,18 @@ if (
 
   reply.includes(
     "contact"
+  ) ||
+
+  reply.includes(
+    "WhatsApp"
+  ) ||
+
+  reply.includes(
+    "jaldi contact"
+  ) ||
+
+  reply.includes(
+    "details"
   )
 
 ) {
@@ -337,10 +391,10 @@ if (
   );
 }
 
-      const botMsg = {
-        role: "bot",
-        text: reply,
-      };
+const botMsg = {
+  role: "bot",
+  text: reply,
+};
 
       // 🔥 START VOICE FIRST
       speak(reply);
