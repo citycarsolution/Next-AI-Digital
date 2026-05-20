@@ -14,11 +14,13 @@ export async function POST(
 `
 🔥 NEW AI LEAD
 
+const message =
+
 👤 CLIENT MESSAGE:
-${body.message}
+${body.message || body.requirement}
 
 🤖 AI REPLY:
-${body.aiReply}
+${body.aiReply || "No AI reply"}
 `;
 
     // 🔥 TELEGRAM API URL
