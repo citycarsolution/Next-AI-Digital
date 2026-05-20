@@ -37,7 +37,10 @@ export default function Services() {
   ];
 
   return (
-    <section className="py-24 px-6 bg-black text-white relative overflow-hidden">
+    <section
+  id="services"
+  className="py-24 px-6 bg-black text-white relative overflow-hidden"
+>
 
       {/* 🔥 Background Glow */}
       <div className="absolute -top-40 -left-40 w-[400px] h-[400px] bg-blue-500/20 blur-3xl rounded-full"></div>

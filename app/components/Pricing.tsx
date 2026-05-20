@@ -100,7 +100,10 @@ export default function Pricing() {
   }, []);
 
   return (
-    <section className="py-20 px-4 md:px-6 bg-black text-white">
+    <section
+  id="pricing"
+  className="py-20 px-4 md:px-6 bg-black text-white"
+>
 
       {/* 🔥 Heading */}
       <div className="text-center mb-14">

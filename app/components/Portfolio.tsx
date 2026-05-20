@@ -37,7 +37,10 @@ export default function Portfolio() {
   ];
 
   return (
-    <section className="py-24 px-6 bg-black text-white">
+    <section
+  id="portfolio"
+  className="py-24 px-6 bg-black text-white"
+>
 
       {/* 🔥 Heading */}
       <div className="text-center mb-16">

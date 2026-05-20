@@ -1,12 +1,17 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import {
+  useState,
+  useEffect,
+  useRef,
+} from "react";
 
 export default function ChatBot() {
 
-  let currentAudio:
-  HTMLAudioElement | null =
-    null;
+  const currentAudio =
+  useRef<HTMLAudioElement | null>(
+    null
+  );
 
 
   const [open, setOpen] =
@@ -162,14 +167,14 @@ export default function ChatBot() {
     audioUrl
   );
 
-if (currentAudio) {
+if (currentAudio.current) {
 
-  currentAudio.pause();
+  currentAudio.current.pause();
 
-  currentAudio.currentTime = 0;
+  currentAudio.current.currentTime = 0;
 }
 
-currentAudio = audio;
+currentAudio.current = audio;
 
 audio.volume = 1;
 
@@ -342,30 +347,22 @@ const sendMessage =
         data.reply ||
         "AI unavailable 😔";
 
-        // 🔥 AUTO LEAD SEND
+       // 🔥 SMART LEAD DETECTION
+
+const hasPhone =
+  /\d{10}/.test(msg);
+
+const hasEmail =
+  msg.includes("@");
+
+const hasBudget =
+  msg.includes("budget") ||
+  msg.includes("₹");
 
 if (
-
-  reply.includes(
-    "Developer"
-  ) ||
-
-  reply.includes(
-    "contact"
-  ) ||
-
-  reply.includes(
-    "WhatsApp"
-  ) ||
-
-  reply.includes(
-    "jaldi contact"
-  ) ||
-
-  reply.includes(
-    "details"
-  )
-
+  hasPhone &&
+  hasEmail &&
+  hasBudget
 ) {
 
   await fetch(
@@ -378,11 +375,11 @@ if (
           "application/json",
       },
 
-       body:
-      JSON.stringify({
-        message: msg,
-        aiReply: reply,
-      }),
+      body:
+        JSON.stringify({
+          message: msg,
+          aiReply: reply,
+        }),
     }
   );
 }

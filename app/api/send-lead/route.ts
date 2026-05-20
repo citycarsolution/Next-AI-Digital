@@ -9,25 +9,45 @@ export async function POST(
     const body =
       await req.json();
 
+    // 🔥 USER MESSAGE
+    const userText =
+      body.message || "";
+
+    // 🔥 EXTRACT DATA
+    const phone =
+      userText.match(/\d{10,13}/)?.[0] ||
+      "Not provided";
+
+    const email =
+      userText.match(
+        /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i
+      )?.[0] ||
+      "Not provided";
+
     // 🔥 TELEGRAM MESSAGE
-    const message =
-`
-🔥 NEW AI LEAD
+    const message = `
+🔥 FINAL QUALIFIED LEAD
 
-const message =
+👤 Client Details:
+${userText}
 
-👤 CLIENT MESSAGE:
-${body.message || body.requirement}
+📱 Mobile:
+${phone}
 
-🤖 AI REPLY:
+📧 Gmail:
+${email}
+
+🤖 AI Conversation Summary:
 ${body.aiReply || "No AI reply"}
+
+✅ Interested Client
 `;
 
-    // 🔥 TELEGRAM API URL
+    // 🔥 TELEGRAM API
     const telegramUrl =
-`https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`;
+      `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`;
 
-    // 🔥 SEND MESSAGE
+    // 🔥 SEND TELEGRAM MESSAGE
     await fetch(
       telegramUrl,
       {

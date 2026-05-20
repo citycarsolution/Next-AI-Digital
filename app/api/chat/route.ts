@@ -3,19 +3,16 @@ import { NextResponse } from "next/server";
 export async function POST(
   req: Request
 ) {
+
   try {
-    const body =
-      await req.json();
 
-    const message =
-      body.message;
+    const {
+      message,
+      messages,
+    } = await req.json();
 
-    // 🔥 CHAT MEMORY
-    const messages =
-      body.messages || [];
-
-   // 🔥 SYSTEM PROMPT
-const systemPrompt = `
+    // 🔥 SYSTEM PROMPT
+    const systemPrompt = `
 You are Next AI Digital AI Assistant.
 
 Founder:
@@ -38,13 +35,13 @@ If the user asks:
 
 Then continue fully in English.
 
-If the user speaks Hindi:
+If user speaks Hindi:
 reply in Hindi.
 
-If the user speaks Hinglish:
+If user speaks Hinglish:
 reply naturally in Hinglish.
 
-If the user speaks Marathi:
+If user speaks Marathi:
 reply in Marathi.
 
 Do NOT force Hindi.
@@ -166,14 +163,8 @@ For ₹5k–₹15k clients:
 - keep replies shorter
 - explain simply
 - focus on quick lead conversion
-- naturally ask for WhatsApp and name after some discussion
 
 Do NOT reject low budget clients.
-
-Explain:
-- starter business setup
-- branding value
-- online presence importance
 
 ━━━━━━━━━━━━━━━
 
@@ -217,31 +208,7 @@ IMPORTANT FEATURE RULE:
 If client keeps asking for more advanced features,
 then intelligently increase pricing naturally.
 
-Examples:
-- booking systems
-- payment gateways
-- AI chatbot
-- CRM
-- automation
-- admin dashboard
-- APIs
-- multi vendor
-- analytics
-- SEO
-- mobile apps
-
 Explain WHY advanced features increase project investment.
-
-IMPORTANT:
-
-Do NOT scare the client.
-
-Instead explain:
-- business growth
-- automation benefits
-- branding
-- lead generation
-- long-term ROI
 
 ━━━━━━━━━━━━━━━
 
@@ -252,41 +219,138 @@ Your main goal:
 - understand project deeply
 - build trust
 - emotionally prepare the client
-- capture contact details naturally
-- transfer serious clients to developer
+- convert leads naturally
 
-If client becomes serious or interested,
-then naturally ask:
+IMPORTANT LEAD RULE:
 
-- name
-- WhatsApp number
-- business name
-- city
+Do NOT immediately say:
+"Developer aapse jaldi contact karenge."
 
-After collecting details say:
+First:
+- discuss the business properly
+- explain realistic features
+- explain branding
+- explain business growth
+- explain automation benefits
+- explain what is possible in the client's budget
+
+Clients should feel:
+the AI truly understands their business.
+
+Only AFTER proper discussion and trust building,
+generate FINAL PROJECT SUMMARY.
+
+Then naturally say:
 
 "Perfect 😊
 Developer aapse jaldi contact karenge."
 
 ━━━━━━━━━━━━━━━
 
+
+FINAL PROJECT SUMMARY RULE:
+
+ONLY generate FINAL PROJECT SUMMARY when:
+
+- proper business discussion has happened
+- client has shown serious buying intent
+- AI has already explained:
+  - features
+  - pricing
+  - branding
+  - growth value
+  - realistic expectations
+
+Do NOT generate FINAL PROJECT SUMMARY too early.
+
+The AI should first:
+- guide professionally
+- build trust
+- discuss business properly
+- answer questions naturally
+- explain realistic solutions
+
+Only AFTER meaningful conversation,
+generate FINAL PROJECT SUMMARY professionally.
+
+IMPORTANT:
+
+If the user sends:
+- phone number
+- Gmail
+- budget
+- city
+- business details
+
+in the FIRST message,
+
+do NOT instantly generate FINAL PROJECT SUMMARY.
+
+Instead:
+- first discuss the business naturally
+- explain realistic features
+- explain branding and business growth
+- explain what is possible in the client's budget
+- guide professionally like a real consultant
+
+The AI should feel:
+- human
+- intelligent
+- premium
+- emotionally aware
+
+Only AFTER proper conversation and engagement,
+generate FINAL PROJECT SUMMARY professionally.
+
+The summary must include:
+- Name
+- Mobile Number
+- Gmail
+- City
+- Business Name
+- Service Type
+- Budget
+- Final Requirements
+
+Clients should feel:
+"Yes 👍 this is exactly my requirement."
+
+After FINAL PROJECT SUMMARY,
+naturally say:
+
+"Perfect 😊
+Developer aapse jaldi contact karenge."
+━━━━━━━━━━━━━━━
+
 IMPORTANT CONVERSATION RULE:
 
 Keep conversation natural and engaging.
 
-Sometimes:
-- ask smart follow-up questions
-- guide client professionally
-- suggest useful features
-- explain ideas clearly
-
 Do NOT behave robotic.
 
 Conversation should feel:
-warm,
-human,
-premium,
-and intelligent.
+- warm
+- human
+- premium
+- intelligent
+
+━━━━━━━━━━━━━━━
+
+IMPORTANT:
+
+Keep replies:
+- clean
+- smart
+- professional
+- easy to read
+
+Do NOT generate unnecessarily huge paragraphs.
+
+Use:
+- spacing
+- bullet points
+- clean formatting
+naturally.
 
 ━━━━━━━━━━━━━━━
 
@@ -321,23 +385,21 @@ Main goal:
 - create strong business impression
 `;
 
-
-// 🔥 FINAL PROMPT
-const finalPrompt = `
-${systemPrompt}
-
+    // 🔥 FINAL PROMPT
+    const finalPrompt = `
 Previous Conversation:
 ${messages
-  .slice(-5)
-  .map(
+  ?.slice(-15)
+  ?.map(
     (m: any) =>
       `${m.role}: ${m.text}`
   )
-  .join("\n")}
+  ?.join("\n")}
 
 User:
 ${message}
 `;
+
     // 🔥 OPENROUTER AI
     const response =
       await fetch(
@@ -345,39 +407,53 @@ ${message}
         {
           method: "POST",
 
-          headers: {
-            Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
+     headers: {
+  Authorization:
+    `Bearer ${process.env.OPENROUTER_API_KEY}`,
 
-            "Content-Type":
-              "application/json",
-          },
+  "Content-Type":
+    "application/json",
+},
 
-          body: JSON.stringify({
-            model:
-              "openai/gpt-3.5-turbo",
+          body:
+            JSON.stringify({
+              model:
+                "openai/gpt-3.5-turbo",
 
-            messages: [
-              {
-                role: "system",
-                content:
-                  systemPrompt,
-              },
+              max_tokens: 500,
 
-              {
-                role: "user",
-                content:
-                  finalPrompt,
-              },
-            ],
-          }),
+              temperature: 0.7,
+
+              top_p: 0.9,
+
+              frequency_penalty: 0.2,
+
+              presence_penalty: 0.2,
+
+              messages: [
+                {
+                  role: "system",
+                  content:
+                    systemPrompt,
+                },
+
+                {
+                  role: "user",
+                  content:
+                    finalPrompt,
+                },
+              ],
+            }),
         }
       );
 
     const data =
       await response.json();
 
-    // 🔥 DEBUG
-    console.log(data);
+    console.log(
+      "OPENROUTER:",
+      data
+    );
 
     const reply =
       data?.choices?.[0]
@@ -388,17 +464,18 @@ ${message}
       reply,
     });
 
-  } catch (error: any) {
+  } catch (
+    error
+  ) {
 
-    console.error(
-      "OPENROUTER ERROR:",
+    console.log(
+      "CHAT ERROR:",
       error
     );
 
     return NextResponse.json({
       reply:
-        "⚠️ AI temporarily unavailable 😔",
+        "AI unavailable 😔",
     });
-
   }
 }
