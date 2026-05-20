@@ -300,6 +300,43 @@ const sendMessage =
         data.reply ||
         "AI unavailable 😔";
 
+        // 🔥 AUTO LEAD SEND
+
+if (
+
+  reply.includes(
+    "Developer"
+  ) ||
+
+  reply.includes(
+    "contact"
+  )
+
+) {
+
+  await fetch(
+    "/api/send-lead",
+    {
+      method: "POST",
+
+      headers: {
+        "Content-Type":
+          "application/json",
+      },
+
+      body:
+        JSON.stringify({
+          name: msg,
+          phone: msg,
+          city: msg,
+          business: msg,
+          budget: msg,
+          requirement: msg,
+        }),
+    }
+  );
+}
+
       const botMsg = {
         role: "bot",
         text: reply,
