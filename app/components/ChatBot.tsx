@@ -4,6 +4,11 @@ import { useState, useEffect } from "react";
 
 export default function ChatBot() {
 
+  let currentAudio:
+  HTMLAudioElement | null =
+    null;
+
+
   const [open, setOpen] =
     useState(true);
 
@@ -111,13 +116,22 @@ export default function ChatBot() {
         );
 
       const audio =
-        new Audio(
-          audioUrl
-        );
+  new Audio(
+    audioUrl
+  );
 
-      audio.volume = 1;
+if (currentAudio) {
 
-      audio.muted = false;
+  currentAudio.pause();
+
+  currentAudio.currentTime = 0;
+}
+
+currentAudio = audio;
+
+audio.volume = 1;
+
+audio.muted = false;
 
       try {
 
@@ -222,103 +236,103 @@ export default function ChatBot() {
   }, []);
 
   // 💬 SEND MESSAGE
-  const sendMessage =
-    async (
-      customText?: string
-    ) => {
+const sendMessage =
+  async (
+    customText?: string
+  ) => {
 
-      const msg =
-        customText ||
-        input;
+    const msg =
+      customText ||
+      input;
 
-      if (
-        !msg.trim()
-      ) return;
+    if (
+      !msg.trim()
+    ) return;
 
-      const userMsg = {
-        role: "user",
-        text: msg,
+    const userMsg = {
+      role: "user",
+      text: msg,
+    };
+
+    const newMessages = [
+      ...messages,
+      userMsg,
+    ];
+
+    // 🔥 SHOW USER MESSAGE
+    setMessages(
+      newMessages
+    );
+
+    setInput("");
+
+    setLoading(true);
+
+    try {
+
+      const res =
+        await fetch(
+          "/api/chat",
+          {
+            method:
+              "POST",
+
+            headers: {
+              "Content-Type":
+                "application/json",
+            },
+
+            body:
+              JSON.stringify({
+                message:
+                  msg,
+
+                messages:
+                  newMessages,
+              }),
+          }
+        );
+
+      const data =
+        await res.json();
+
+      const reply =
+        data.reply ||
+        "AI unavailable 😔";
+
+      const botMsg = {
+        role: "bot",
+        text: reply,
       };
 
-      const newMessages = [
-        ...messages,
-        userMsg,
-      ];
+      // 🔥 START VOICE FIRST
+      speak(reply);
 
-      setMessages(
-        newMessages
-      );
-
-      setInput("");
-
-      setLoading(true);
-
-      try {
-
-        const res =
-          await fetch(
-            "/api/chat",
-            {
-              method:
-                "POST",
-
-              headers: {
-                "Content-Type":
-                  "application/json",
-              },
-
-              body:
-                JSON.stringify({
-                  message:
-                    msg,
-
-                  messages:
-                    newMessages,
-                }),
-            }
-          );
-
-        const data =
-          await res.json();
-
-        const reply =
-          data.reply ||
-          "AI unavailable 😔";
-
-        const botMsg = {
-          role: "bot",
-          text: reply,
-        };
+      // 🔥 SHOW TEXT WHILE SPEAKING
+      setTimeout(() => {
 
         setMessages([
           ...newMessages,
           botMsg,
         ]);
 
-        // 🔥 VOICE REPLY
-        setTimeout(() => {
+      }, 100);
 
-          speak(
-            reply
-          );
+    } catch {
 
-        }, 400);
+      setMessages([
+        ...newMessages,
+        {
+          role: "bot",
+          text:
+            "⚠️ AI server busy 😔",
+        },
+      ]);
+    }
 
-      } catch {
-
-        setMessages([
-          ...newMessages,
-          {
-            role: "bot",
-            text:
-              "⚠️ AI server busy 😔",
-          },
-        ]);
-      }
-
-      setLoading(false);
-    };
-
+    setLoading(false);
+};
+        
   // 🎤 VOICE INPUT
   const startListening =
     () => {
