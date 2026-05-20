@@ -378,15 +378,11 @@ if (
           "application/json",
       },
 
-      body:
-        JSON.stringify({
-          name: msg,
-          phone: msg,
-          city: msg,
-          business: msg,
-          budget: msg,
-          requirement: msg,
-        }),
+       body:
+      JSON.stringify({
+        message: msg,
+        aiReply: reply,
+      }),
     }
   );
 }
