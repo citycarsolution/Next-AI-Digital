@@ -704,7 +704,7 @@ const botMsg = {
                   sendMessage();
                 }
               }}
-              placeholder="Type message..."
+              placeholder="Ask about websites, apps, SEO or AI..."
               className="
                 w-full
                 p-3

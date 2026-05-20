@@ -9,54 +9,123 @@ export async function POST(
     const { text } =
       await req.json();
 
+    // 🔥 CLEAN TEXT
+    const cleanText =
+      text
+
+        // REMOVE MARKDOWN
+        .replace(/\*\*/g, "")
+        .replace(/\*/g, "")
+        .replace(/#/g, "")
+        .replace(/```/g, "")
+        .replace(/`/g, "")
+
+        // REMOVE EMOJIS
+        .replace(
+          /[\u{1F600}-\u{1F64F}]/gu,
+          ""
+        )
+
+        .replace(
+          /[\u{1F300}-\u{1F5FF}]/gu,
+          ""
+        )
+
+        .replace(
+          /[\u{1F680}-\u{1F6FF}]/gu,
+          ""
+        )
+
+        .replace(
+          /[\u{2600}-\u{26FF}]/gu,
+          ""
+        )
+
+        .replace(
+          /[\u{2700}-\u{27BF}]/gu,
+          ""
+        )
+
+        // REMOVE INVALID UTF
+        .replace(
+          /[\uD800-\uDFFF]/g,
+          ""
+        )
+
+        // CLEAN EXTRA SYMBOLS
+        .replace(
+          /[^\x00-\x7F\u0900-\u097F\s.,!?₹()-]/g,
+          ""
+        )
+
+        // REMOVE NEWLINES
+        .replace(/\n/g, " ")
+
+        // REMOVE EXTRA SPACES
+        .replace(/\s+/g, " ")
+
+        .trim();
+
+    // 🔥 CARTESIA API
     const response =
       await fetch(
-        "https://api.elevenlabs.io/v1/text-to-speech/EXAVITQu4vr4xnSDxMaL",
+        "https://api.cartesia.ai/tts/bytes",
         {
           method: "POST",
 
-          headers: {
-            "xi-api-key":
-              process.env
-                .ELEVENLABS_API_KEY || "",
+       headers: {
+  "Content-Type":
+    "application/json",
 
-            "Content-Type":
-              "application/json",
+  "X-API-Key":
+    process.env
+      .CARTESIA_API_KEY || "",
 
-            Accept:
-              "audio/mpeg",
-          },
+  "Cartesia-Version":
+    "2026-03-01",
+},
 
           body:
             JSON.stringify({
-              text,
-
               model_id:
-                "eleven_multilingual_v2",
+                "sonic-2",
 
-              voice_settings: {
-                stability: 0.4,
-                similarity_boost: 0.9,
-                style: 0.7,
-                use_speaker_boost: true,
+              transcript:
+                cleanText,
+
+              voice: {
+                mode: "id",
+
+                id:
+                  "faf0731e-dfb9-4cfc-8119-259a79b27e12"
               },
+
+              output_format: {
+  container: "wav",
+
+  encoding:
+    "pcm_f32le",
+
+  sample_rate:
+    44100
+}
             }),
         }
       );
 
-    // 🔥 REAL ERROR LOG
+    // 🔥 ERROR CHECK
     if (!response.ok) {
 
       const errorText =
         await response.text();
 
       console.log(
-        "ELEVENLABS ERROR:",
+        "CARTESIA ERROR:",
         errorText
       );
 
       throw new Error(
-        "ElevenLabs Failed"
+        "Cartesia Failed"
       );
     }
 

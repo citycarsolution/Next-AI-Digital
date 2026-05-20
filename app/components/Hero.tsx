@@ -12,7 +12,7 @@ export default function Hero() {
   return (
     <section className="relative h-screen w-full overflow-hidden text-white">
 
-      {/* 🎥 Background Video (CLEAN) */}
+      {/* 🎥 Background Video */}
       <video
         ref={videoRef}
         autoPlay
@@ -24,7 +24,7 @@ export default function Hero() {
         <source src="/videos/ai-bg.mp4" type="video/mp4" />
       </video>
 
-      {/* 🔥 LIGHT Overlay (only for text visibility) */}
+      {/* 🔥 Overlay */}
       <div className="absolute inset-0 bg-black/40"></div>
 
       {/* ✨ Content */}
@@ -39,17 +39,29 @@ export default function Hero() {
           AI based website, apps aur SEO solutions jo real clients laate hain 💰
         </p>
 
-        <p className="text-yellow-400 mb-6 font-semibold text-lg">
+        <p className="text-yellow-400 mb-8 font-semibold text-lg">
           Limited Offer: Website Starting ₹4999
         </p>
 
+        {/* 🔥 Buttons */}
         <div className="flex gap-4 flex-wrap justify-center">
 
+          {/* WhatsApp Button */}
           <a
             href="https://wa.me/919082552031"
-            className="bg-green-500 hover:bg-green-600 px-6 py-3 rounded-xl font-semibold shadow-lg hover:scale-105"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-green-500 hover:bg-green-600 px-6 py-3 rounded-xl font-semibold shadow-lg hover:scale-105 transition duration-300"
           >
             WhatsApp Now
+          </a>
+
+          {/* 📞 Call Button */}
+          <a
+            href="tel:+919082552031"
+            className="bg-blue-500 hover:bg-blue-600 px-6 py-3 rounded-xl font-semibold shadow-lg hover:scale-105 transition duration-300"
+          >
+            📞 Call Now
           </a>
 
         </div>
