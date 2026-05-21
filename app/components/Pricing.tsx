@@ -1,183 +1,389 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import {
+  useEffect,
+  useRef,
+} from "react";
 
 export default function Pricing() {
-  const sliderRef = useRef<HTMLDivElement>(null);
+
+  const sliderRef =
+    useRef<HTMLDivElement>(null);
+
+  // ==============================
+  // PRICING PLANS
+  // ==============================
 
   const plans = [
     {
       name: "Basic",
       price: "₹5,000",
       highlight: false,
+
       features: [
         "1–5 Pages Website",
         "Mobile Responsive Design",
-        "WhatsApp Chat Integration",
-        "Basic UI Design",
+        "WhatsApp Integration",
         "Fast Loading",
+        "Basic UI Design",
       ],
     },
+
     {
       name: "Starter",
       price: "₹10,000",
       highlight: false,
+
       features: [
         "5–8 Pages Website",
         "Modern UI Design",
         "Contact Form",
         "Basic SEO Setup",
-        "Speed Optimization",
         "Google Map Integration",
+        "Speed Optimization",
       ],
     },
+
     {
       name: "Growth",
       price: "₹25,000",
       highlight: true,
+
       features: [
         "8–12 Pages Website",
-        "Premium UI/UX Design",
+        "Premium UI/UX",
         "WhatsApp + Lead System",
         "Advanced SEO Ready",
-        "Fast Performance Optimization",
+        "Analytics Setup",
+        "Fast Performance",
         "Conversion Focused Design",
-        "Basic Analytics Setup",
       ],
     },
+
     {
       name: "Business",
       price: "₹45,000",
       highlight: false,
+
       features: [
-        "Custom Design Website",
-        "Advanced UI/UX Experience",
+        "Custom Design",
+        "Advanced UI/UX",
         "Complete SEO Setup",
-        "Speed Optimization",
-        "Security Setup",
         "Lead Generation System",
-        "Google Analytics Integration",
+        "Google Analytics",
+        "Security Optimization",
         "Scalable Architecture",
       ],
     },
+
     {
       name: "Pro AI",
       price: "₹60,000+",
       highlight: false,
+
       features: [
-        "AI Powered Website",
-        "Admin Panel Dashboard",
+        "AI Website",
+        "Admin Dashboard",
         "Booking System",
         "Payment Integration",
-        "AI Automation System",
         "CRM Integration",
-        "Custom Features Development",
-        "Full Business Automation",
+        "Automation System",
+        "Custom Development",
+        "Business Automation",
       ],
     },
   ];
 
-  // 🔥 Auto Slide (Mobile)
+  // ==============================
+  // MOBILE AUTO SLIDE
+  // ==============================
+
   useEffect(() => {
-    const slider = sliderRef.current;
+
+    const slider =
+      sliderRef.current;
+
     if (!slider) return;
 
     let index = 0;
 
-    const interval = setInterval(() => {
-      const width = slider.clientWidth;
-      index++;
+    const interval =
+      setInterval(() => {
 
-      if (index >= plans.length) index = 0;
+        const width =
+          slider.clientWidth;
 
-      slider.scrollTo({
-        left: width * index,
-        behavior: "smooth",
-      });
-    }, 2500);
+        index++;
 
-    return () => clearInterval(interval);
+        if (
+          index >= plans.length
+        ) {
+
+          index = 0;
+        }
+
+        slider.scrollTo({
+          left:
+            width * index,
+
+          behavior:
+            "smooth",
+        });
+
+      }, 3500);
+
+    return () =>
+      clearInterval(
+        interval
+      );
+
   }, []);
 
   return (
+
     <section
-  id="pricing"
-  className="py-20 px-4 md:px-6 bg-black text-white"
->
+      id="pricing"
+      className="
+        py-24
+        px-4
+        md:px-6
+        bg-black
+        text-white
+        relative
+        overflow-hidden
+      "
+    >
 
-      {/* 🔥 Heading */}
-      <div className="text-center mb-14">
-        <h2 className="text-3xl md:text-6xl font-extrabold">
-          Pricing That Grows Your Business 🚀
+      {/* BG GLOW */}
+      <div className="absolute top-0 left-0 w-72 h-72 bg-blue-500/20 blur-3xl rounded-full"></div>
+
+      <div className="absolute bottom-0 right-0 w-72 h-72 bg-purple-500/20 blur-3xl rounded-full"></div>
+
+      {/* HEADING */}
+      <div className="text-center mb-16 relative z-10">
+
+        <h2 className="text-4xl md:text-6xl font-extrabold leading-tight">
+
+          Pricing That
+          <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+            {" "}Grows
+          </span>
+          {" "}Your Business 🚀
+
         </h2>
-        <p className="text-gray-400 mt-3">
-          Professional website packages for serious businesses 💰
+
+        <p className="text-gray-400 mt-4 max-w-2xl mx-auto">
+
+          Professional website and AI solutions
+          designed for serious businesses.
+
         </p>
+
       </div>
 
-      {/* 💻 Desktop Grid */}
-      <div className="hidden md:grid md:grid-cols-3 lg:grid-cols-5 gap-8 max-w-7xl mx-auto">
-        {plans.map((plan, i) => (
-          <Card key={i} plan={plan} />
-        ))}
+      {/* DESKTOP GRID */}
+      <div
+        className="
+          hidden
+          md:grid
+          md:grid-cols-2
+          lg:grid-cols-5
+          gap-8
+          max-w-7xl
+          mx-auto
+          relative
+          z-10
+        "
+      >
+
+        {plans.map(
+          (
+            plan,
+            i
+          ) => (
+
+            <Card
+              key={i}
+              plan={plan}
+            />
+          )
+        )}
+
       </div>
 
-      {/* 📱 Mobile Slider */}
+      {/* MOBILE SLIDER */}
       <div
         ref={sliderRef}
-        className="md:hidden flex overflow-x-auto gap-4 snap-x snap-mandatory scrollbar-hide"
+        className="
+          md:hidden
+          flex
+          overflow-x-auto
+          snap-x
+          snap-mandatory
+          scrollbar-hide
+          gap-4
+          relative
+          z-10
+        "
       >
-        {plans.map((plan, i) => (
-          <div key={i} className="min-w-full snap-center px-2">
-            <Card plan={plan} />
-          </div>
-        ))}
+
+        {plans.map(
+          (
+            plan,
+            i
+          ) => (
+
+            <div
+              key={i}
+              className="
+                min-w-full
+                snap-center
+                px-1
+              "
+            >
+
+              <Card
+                plan={plan}
+              />
+
+            </div>
+          )
+        )}
+
       </div>
 
     </section>
   );
 }
 
-// 💎 Card Component
-function Card({ plan }: any) {
+// ==============================
+// CARD
+// ==============================
+
+function Card({
+  plan,
+}: any) {
+
+  const whatsapp =
+    process.env
+      .NEXT_PUBLIC_WHATSAPP ||
+
+    "https://wa.me/919082552031";
+
   return (
+
     <div
-      className={`p-[1px] rounded-2xl ${
-        plan.highlight
-          ? "bg-gradient-to-r from-blue-500 to-purple-500 scale-105 shadow-2xl"
-          : "bg-white/10"
-      }`}
+      className={`
+        p-[1px]
+        rounded-3xl
+        transition-all
+        duration-300
+        hover:-translate-y-2
+        hover:shadow-2xl
+        ${
+          plan.highlight
+            ? "bg-gradient-to-r from-blue-500 to-purple-500 scale-[1.03]"
+            : "bg-white/10"
+        }
+      `}
     >
-      <div className="bg-black rounded-2xl p-6 text-center flex flex-col gap-4">
 
-        {/* Plan Name */}
-        <h3 className="text-xl font-bold">{plan.name}</h3>
+      <div
+        className="
+          bg-[#0f172a]
+          rounded-3xl
+          p-7
+          h-full
+          flex
+          flex-col
+          backdrop-blur-xl
+        "
+      >
 
-        {/* Price */}
-        <p className="text-3xl font-extrabold text-blue-400">
-          {plan.price}
-        </p>
+        {/* PLAN */}
+        <div className="mb-5">
 
-        {/* Features */}
-        <ul className="text-gray-400 text-sm space-y-2 text-left">
-          {plan.features.map((f: string, idx: number) => (
-            <li key={idx}>✔ {f}</li>
-          ))}
+          <h3 className="text-2xl font-bold mb-2">
+
+            {plan.name}
+
+          </h3>
+
+          <p className="text-4xl font-extrabold text-blue-400">
+
+            {plan.price}
+
+          </p>
+
+        </div>
+
+        {/* FEATURES */}
+        <ul className="space-y-3 flex-1">
+
+          {plan.features.map(
+            (
+              feature: string,
+              idx: number
+            ) => (
+
+              <li
+                key={idx}
+                className="
+                  text-gray-300
+                  text-sm
+                  flex
+                  items-start
+                  gap-2
+                "
+              >
+
+                <span className="text-green-400">
+
+                  ✔
+
+                </span>
+
+                <span>
+
+                  {feature}
+
+                </span>
+
+              </li>
+            )
+          )}
+
         </ul>
 
         {/* CTA */}
         <a
-          href={`https://wa.me/919082552031?text=I want ${plan.name} Plan`}
-          className={`mt-3 px-5 py-2 rounded-lg font-semibold ${
-            plan.highlight
-              ? "bg-blue-500 hover:bg-blue-600"
-              : "bg-white text-black hover:bg-gray-200"
-          }`}
+          href={`${whatsapp}?text=Hi 😊 I want ${plan.name} Plan`}
+
+          target="_blank"
+
+          className={`
+            mt-7
+            py-3
+            rounded-xl
+            font-semibold
+            text-center
+            transition-all
+            duration-300
+            hover:scale-[1.02]
+            ${
+              plan.highlight
+                ? "bg-gradient-to-r from-blue-500 to-purple-500 text-white"
+                : "bg-white text-black hover:bg-gray-200"
+            }
+          `}
         >
-          Book Now
+
+          Book Now 🚀
+
         </a>
 
       </div>
+
     </div>
   );
 }

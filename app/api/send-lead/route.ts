@@ -1,73 +1,199 @@
 import { NextResponse } from "next/server";
 
-export async function POST(
-  req: Request
-) {
+export async function POST(req: Request) {
 
   try {
+
+    // ==============================
+    // BODY
+    // ==============================
 
     const body =
       await req.json();
 
-    // 🔥 USER MESSAGE
-    const userText =
-      body.message || "";
+    // ==============================
+    // CLEAN USER MESSAGE
+    // ==============================
 
-    // 🔥 EXTRACT DATA
+    const userText =
+      (body.message || "")
+
+        // REMOVE MARKDOWN EMAILS
+        .replace(
+          /\[([^\]]+)\]\(mailto:[^)]+\)/g,
+          "$1"
+        )
+
+        // REMOVE MARKDOWN
+        .replace(/\*\*/g, "")
+        .replace(/\*/g, "")
+        .replace(/#/g, "")
+        .replace(/```/g, "")
+        .replace(/`/g, "")
+
+        // REMOVE EXTRA SPACES
+        .replace(/\s+/g, " ")
+
+        .trim();
+
+    // ==============================
+    // CLEAN AI REPLY
+    // ==============================
+
+    const aiReply =
+      (body.aiReply || "")
+
+        .replace(/\*\*/g, "")
+        .replace(/\*/g, "")
+        .replace(/#/g, "")
+        .replace(/```/g, "")
+        .replace(/`/g, "")
+
+        .replace(/\s+/g, " ")
+
+        .trim();
+
+    // ==============================
+    // EMPTY CHECK
+    // ==============================
+
+    if (!userText) {
+
+      return NextResponse.json({
+        success: false,
+        error: "Empty message",
+      });
+    }
+
+    // ==============================
+    // EXTRACT PHONE
+    // ==============================
+
     const phone =
-      userText.match(/\d{10,13}/)?.[0] ||
+      userText.match(
+        /\d{10,13}/
+      )?.[0] ||
+
       "Not provided";
+
+    // ==============================
+    // EXTRACT EMAIL
+    // ==============================
 
     const email =
       userText.match(
         /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i
       )?.[0] ||
+
       "Not provided";
 
-    // 🔥 TELEGRAM MESSAGE
-    const message = `
+    // ==============================
+    // QUALIFIED LEAD CHECK
+    // ==============================
+
+    const hasLead =
+      phone !==
+        "Not provided" ||
+
+      email !==
+        "Not provided";
+
+    // DON'T SEND RANDOM CHATS
+    if (!hasLead) {
+
+      return NextResponse.json({
+        success: false,
+        error:
+          "No qualified lead",
+      });
+    }
+
+    // ==============================
+    // TELEGRAM MESSAGE
+    // ==============================
+
+    const telegramMessage = `
 🔥 FINAL QUALIFIED LEAD
 
-👤 Client Details:
+👤 CLIENT MESSAGE:
 ${userText}
 
-📱 Mobile:
+📱 MOBILE:
 ${phone}
 
-📧 Gmail:
+📧 EMAIL:
 ${email}
 
-🤖 AI Conversation Summary:
-${body.aiReply || "No AI reply"}
+🤖 AI RESPONSE:
+${aiReply}
 
 ✅ Interested Client
 `;
 
-    // 🔥 TELEGRAM API
+    // ==============================
+    // TELEGRAM URL
+    // ==============================
+
     const telegramUrl =
       `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`;
 
-    // 🔥 SEND TELEGRAM MESSAGE
-    await fetch(
-      telegramUrl,
-      {
-        method: "POST",
+    // ==============================
+    // SEND TELEGRAM MESSAGE
+    // ==============================
 
-        headers: {
-          "Content-Type":
-            "application/json",
-        },
+    const telegramResponse =
+      await fetch(
+        telegramUrl,
+        {
+          method: "POST",
 
-        body:
-          JSON.stringify({
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+
+          body: JSON.stringify({
+
             chat_id:
               process.env.TELEGRAM_CHAT_ID,
 
             text:
-              message,
+              telegramMessage,
           }),
-      }
+        }
+      );
+
+    // ==============================
+    // TELEGRAM RESPONSE
+    // ==============================
+
+    const telegramData =
+      await telegramResponse.json();
+
+    console.log(
+      "TELEGRAM RESPONSE:",
+      telegramData
     );
+
+    // ==============================
+    // TELEGRAM ERROR
+    // ==============================
+
+    if (
+      !telegramResponse.ok
+    ) {
+
+      return NextResponse.json({
+        success: false,
+
+        error:
+          "Telegram send failed",
+      });
+    }
+
+    // ==============================
+    // SUCCESS
+    // ==============================
 
     console.log(
       "✅ TELEGRAM LEAD SENT"
@@ -77,9 +203,7 @@ ${body.aiReply || "No AI reply"}
       success: true,
     });
 
-  } catch (
-    error
-  ) {
+  } catch (error) {
 
     console.log(
       "❌ TELEGRAM ERROR:",
@@ -88,6 +212,9 @@ ${body.aiReply || "No AI reply"}
 
     return NextResponse.json({
       success: false,
+
+      error:
+        "Server error",
     });
   }
 }

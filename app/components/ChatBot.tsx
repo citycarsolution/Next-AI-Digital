@@ -8,23 +8,12 @@ import {
 
 export default function ChatBot() {
 
-  const currentAudio =
-  useRef<HTMLAudioElement | null>(
-    null
-  );
-
+  // ==============================
+  // STATES
+  // ==============================
 
   const [open, setOpen] =
     useState(true);
-
-  const [messages, setMessages] =
-    useState([
-      {
-        role: "bot",
-        text:
-          "Welcome 👋 How can I help you?",
-      },
-    ]);
 
   const [input, setInput] =
     useState("");
@@ -35,7 +24,33 @@ export default function ChatBot() {
   const [isMobile, setIsMobile] =
     useState(false);
 
-  // 🔥 MOBILE DETECT
+  const [messages, setMessages] =
+    useState([
+      {
+        role: "bot",
+        text:
+          "Welcome 👋 How can I help you?",
+      },
+    ]);
+
+  // ==============================
+  // REFS
+  // ==============================
+
+  const currentAudio =
+    useRef<HTMLAudioElement | null>(
+      null
+    );
+
+  const messagesEndRef =
+    useRef<HTMLDivElement | null>(
+      null
+    );
+
+  // ==============================
+  // MOBILE DETECT
+  // ==============================
+
   useEffect(() => {
 
     const checkMobile =
@@ -62,68 +77,81 @@ export default function ChatBot() {
 
   }, []);
 
-  // 🔥 PREMIUM VOICE
+  // ==============================
+  // AUTO SCROLL
+  // ==============================
+
+  useEffect(() => {
+
+    messagesEndRef.current
+      ?.scrollIntoView({
+        behavior: "smooth",
+      });
+
+  }, [messages]);
+
+  // ==============================
+  // SPEAK FUNCTION
+  // ==============================
+
   const speak = async (
     text: string
   ) => {
 
     try {
 
-  const cleanText =
-    text
+      const cleanText =
+        text
 
-      // 🔥 REMOVE MARKDOWN
-      .replace(/\*\*/g, "")
-      .replace(/\*/g, "")
-      .replace(/#/g, "")
-      .replace(/```/g, "")
-      .replace(/`/g, "")
+          .replace(/\*\*/g, "")
+          .replace(/\*/g, "")
+          .replace(/#/g, "")
+          .replace(/```/g, "")
+          .replace(/`/g, "")
 
-      // 🔥 REMOVE EMOJIS
-      .replace(
-        /[\u{1F600}-\u{1F64F}]/gu,
-        ""
-      )
+          // REMOVE EMOJIS
+          .replace(
+            /[\u{1F600}-\u{1F64F}]/gu,
+            ""
+          )
 
-      .replace(
-        /[\u{1F300}-\u{1F5FF}]/gu,
-        ""
-      )
+          .replace(
+            /[\u{1F300}-\u{1F5FF}]/gu,
+            ""
+          )
 
-      .replace(
-        /[\u{1F680}-\u{1F6FF}]/gu,
-        ""
-      )
+          .replace(
+            /[\u{1F680}-\u{1F6FF}]/gu,
+            ""
+          )
 
-      .replace(
-        /[\u{2600}-\u{26FF}]/gu,
-        ""
-      )
+          .replace(
+            /[\u{2600}-\u{26FF}]/gu,
+            ""
+          )
 
-      .replace(
-        /[\u{2700}-\u{27BF}]/gu,
-        ""
-      )
+          .replace(
+            /[\u{2700}-\u{27BF}]/gu,
+            ""
+          )
 
-      // 🔥 REMOVE INVALID UTF
-      .replace(
-        /[\uD800-\uDFFF]/g,
-        ""
-      )
+          // REMOVE INVALID UTF
+          .replace(
+            /[\uD800-\uDFFF]/g,
+            ""
+          )
 
-      // 🔥 CLEAN EXTRA SYMBOLS
-      .replace(
-        /[^\x00-\x7F\u0900-\u097F\s.,!?₹()-]/g,
-        ""
-      )
+          // CLEAN SYMBOLS
+          .replace(
+            /[^\x00-\x7F\u0900-\u097F\s.,!?₹()-]/g,
+            ""
+          )
 
-      // 🔥 REMOVE NEWLINES
-      .replace(/\n/g, " ")
+          .replace(/\n/g, " ")
 
-      // 🔥 REMOVE EXTRA SPACES
-      .replace(/\s+/g, " ")
+          .replace(/\s+/g, " ")
 
-      .trim();
+          .trim();
 
       const res =
         await fetch(
@@ -163,22 +191,27 @@ export default function ChatBot() {
         );
 
       const audio =
-  new Audio(
-    audioUrl
-  );
+        new Audio(
+          audioUrl
+        );
 
-if (currentAudio.current) {
+      // STOP OLD AUDIO
+      if (
+        currentAudio.current
+      ) {
 
-  currentAudio.current.pause();
+        currentAudio.current.pause();
 
-  currentAudio.current.currentTime = 0;
-}
+        currentAudio.current.currentTime =
+          0;
+      }
 
-currentAudio.current = audio;
+      currentAudio.current =
+        audio;
 
-audio.volume = 1;
+      audio.volume = 1;
 
-audio.muted = false;
+      audio.muted = false;
 
       try {
 
@@ -196,9 +229,7 @@ audio.muted = false;
         );
       }
 
-    } catch (
-      error
-    ) {
+    } catch (error) {
 
       console.log(
         "VOICE ERROR:",
@@ -207,55 +238,45 @@ audio.muted = false;
     }
   };
 
-  // 🔥 AUTO WELCOME
+  // ==============================
+  // AUTO WELCOME
+  // ==============================
+
   useEffect(() => {
 
-    let welcomed = false;
+    let welcomed =
+      false;
 
     const startWelcome =
       async () => {
 
-        if (welcomed)
-          return;
+        if (
+          welcomed
+        ) return;
 
         welcomed = true;
 
-        try {
+        setTimeout(() => {
 
-          setTimeout(() => {
-
-            speak(
-              "Welcome to Next AI Digital. How can I help you today?"
-            );
-
-          }, 1200);
-
-        } catch (
-          error
-        ) {
-
-          console.log(
-            "WELCOME ERROR:",
-            error
+          speak(
+            "Welcome to Next AI Digital. How can I help you today?"
           );
-        }
+
+        }, 1200);
       };
 
-    // 🔥 MOBILE
     document.addEventListener(
       "touchstart",
       startWelcome,
       { once: true }
     );
 
-    // 🔥 DESKTOP
     document.addEventListener(
       "mousemove",
       startWelcome,
       { once: true }
     );
 
-    // 🔥 CLICK
     document.addEventListener(
       "click",
       startWelcome,
@@ -282,142 +303,194 @@ audio.muted = false;
 
   }, []);
 
-  // 💬 SEND MESSAGE
-const sendMessage =
-  async (
-    customText?: string
-  ) => {
+  // ==============================
+  // SEND MESSAGE
+  // ==============================
 
-    const msg =
-      customText ||
-      input;
+  const sendMessage =
+    async (
+      customText?: string
+    ) => {
 
-    if (
-      !msg.trim()
-    ) return;
+      const msg =
+        customText ||
+        input;
 
-    const userMsg = {
-      role: "user",
-      text: msg,
-    };
+      if (
+        !msg.trim()
+      ) return;
 
-    const newMessages = [
-      ...messages,
-      userMsg,
-    ];
+      const userMsg = {
+        role: "user",
+        text: msg,
+      };
 
-    // 🔥 SHOW USER MESSAGE
-    setMessages(
-      newMessages
-    );
+      const newMessages = [
+        ...messages,
+        userMsg,
+      ];
 
-    setInput("");
+      // SHOW USER MESSAGE
+      setMessages(
+        newMessages
+      );
 
-    setLoading(true);
+      setInput("");
 
-    try {
+      setLoading(true);
 
-      const res =
-        await fetch(
-          "/api/chat",
-          {
-            method:
-              "POST",
+      try {
 
-            headers: {
-              "Content-Type":
-                "application/json",
-            },
+        // ==============================
+        // CHAT API
+        // ==============================
 
-            body:
-              JSON.stringify({
-                message:
-                  msg,
+        const res =
+          await fetch(
+            "/api/chat",
+            {
+              method:
+                "POST",
 
-                messages:
-                  newMessages,
-              }),
-          }
+              headers: {
+                "Content-Type":
+                  "application/json",
+              },
+
+              body:
+                JSON.stringify({
+                  message:
+                    msg,
+
+                  messages:
+                    newMessages,
+                }),
+            }
+          );
+
+        const data =
+          await res.json();
+
+        const reply =
+          data.reply ||
+          "AI unavailable 😔";
+
+        // ==============================
+        // LEAD DETECTION
+        // ==============================
+
+        const hasPhone =
+          /\d{10}/.test(
+            msg
+          );
+
+        const hasEmail =
+          msg.includes(
+            "@"
+          );
+
+        const seriousKeywords = [
+          "website",
+          "app",
+          "seo",
+          "crm",
+          "automation",
+          "business",
+          "booking",
+          "dashboard",
+          "software",
+          "ecommerce",
+          "budget",
+        ];
+
+        const isInterested =
+          seriousKeywords.some(
+            (k) =>
+              msg
+                .toLowerCase()
+                .includes(k)
+          );
+
+        // SEND LEAD
+        if (
+          (
+            hasPhone ||
+            hasEmail
+          ) &&
+          isInterested
+        ) {
+
+          await fetch(
+            "/api/send-lead",
+            {
+              method:
+                "POST",
+
+              headers: {
+                "Content-Type":
+                  "application/json",
+              },
+
+              body:
+                JSON.stringify({
+                  message:
+                    msg,
+
+                  aiReply:
+                    reply,
+                }),
+            }
+          );
+        }
+
+        // ==============================
+        // BOT MESSAGE
+        // ==============================
+
+        const botMsg = {
+          role: "bot",
+          text: reply,
+        };
+
+        // VOICE
+        await speak(
+          reply
         );
 
-      const data =
-        await res.json();
+        // SHOW BOT MESSAGE
+        setMessages(
+          (prev: any) => [
+            ...prev,
+            botMsg,
+          ]
+        );
 
-      const reply =
-        data.reply ||
-        "AI unavailable 😔";
+      } catch (error) {
 
-       // 🔥 SMART LEAD DETECTION
+        console.log(
+          "CHAT ERROR:",
+          error
+        );
 
-const hasPhone =
-  /\d{10}/.test(msg);
+        setMessages(
+          (prev: any) => [
+            ...prev,
+            {
+              role: "bot",
+              text:
+                "⚠️ AI server busy 😔",
+            },
+          ]
+        );
+      }
 
-const hasEmail =
-  msg.includes("@");
+      setLoading(false);
+    };
 
-const hasBudget =
-  msg.includes("budget") ||
-  msg.includes("₹");
+  // ==============================
+  // VOICE INPUT
+  // ==============================
 
-if (
-  hasPhone &&
-  hasEmail &&
-  hasBudget
-) {
-
-  await fetch(
-    "/api/send-lead",
-    {
-      method: "POST",
-
-      headers: {
-        "Content-Type":
-          "application/json",
-      },
-
-      body:
-        JSON.stringify({
-          message: msg,
-          aiReply: reply,
-        }),
-    }
-  );
-}
-
-const botMsg = {
-  role: "bot",
-  text: reply,
-};
-
-      // 🔥 START VOICE FIRST
-      speak(reply);
-
-      // 🔥 SHOW TEXT WHILE SPEAKING
-      setTimeout(() => {
-
-        setMessages([
-          ...newMessages,
-          botMsg,
-        ]);
-
-      }, 100);
-
-    } catch {
-
-      setMessages([
-        ...newMessages,
-        {
-          role: "bot",
-          text:
-            "⚠️ AI server busy 😔",
-        },
-      ]);
-    }
-
-    setLoading(false);
-};
-        
-  // 🎤 VOICE INPUT
   const startListening =
     () => {
 
@@ -522,6 +595,10 @@ const botMsg = {
         };
     };
 
+  // ==============================
+  // UI
+  // ==============================
+
   return (
     <>
 
@@ -571,7 +648,7 @@ const botMsg = {
             ${
               isMobile
                 ? "bottom-16 right-3 left-3 h-[70vh]"
-                : "bottom-20 right-6 w-[310px] h-[500px]"
+                : "bottom-20 right-6 w-[320px] h-[520px]"
             }
           `}
         >
@@ -642,12 +719,20 @@ const botMsg = {
                 >
 
                   <div
-                    className={`px-4 py-3 rounded-2xl text-sm max-w-[85%] whitespace-pre-wrap ${
-                      m.role ===
-                      "user"
-                        ? "bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-br-md"
-                        : "bg-white/10 text-white rounded-bl-md border border-blue-500/20"
-                    }`}
+                    className={`
+                      px-4
+                      py-3
+                      rounded-2xl
+                      text-sm
+                      max-w-[85%]
+                      whitespace-pre-wrap
+                      ${
+                        m.role ===
+                        "user"
+                          ? "bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-br-md"
+                          : "bg-white/10 text-white rounded-bl-md border border-blue-500/20"
+                      }
+                    `}
                   >
                     {m.text}
                   </div>
@@ -669,6 +754,8 @@ const botMsg = {
 
               </div>
             )}
+
+            <div ref={messagesEndRef} />
 
           </div>
 
@@ -761,7 +848,11 @@ const botMsg = {
 
             {/* WHATSAPP */}
             <a
-              href="https://wa.me/919082552031"
+              href={
+                process.env
+                  .NEXT_PUBLIC_WHATSAPP ||
+                "https://wa.me/919082552031"
+              }
               target="_blank"
               className="
                 block
