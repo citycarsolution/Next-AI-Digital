@@ -86,186 +86,6 @@ export default function ChatBot() {
   }, [messages]);
 
   // ==============================
-  // SPEAK FUNCTION
-  // ==============================
-
-  const speak = async (
-    text: string
-  ) => {
-
-    try {
-
-      // 🔥 STOP OLD VOICE
-      speechSynthesis.cancel();
-
-      // 🔥 CLEAN TEXT
-      const cleanText =
-        text
-          .replace(/\*\*/g, "")
-          .replace(/\*/g, "")
-          .replace(/#/g, "")
-          .replace(/```/g, "")
-          .replace(/`/g, "")
-          .replace(/\n/g, " ")
-          .replace(/\s+/g, " ")
-          .trim();
-
-      // 🔥 SHORT RESPONSE
-      const shortText =
-        cleanText
-          .split(".")
-          .slice(0, 2)
-          .join(".");
-
-      // 🔥 CREATE VOICE
-      const utterance =
-        new SpeechSynthesisUtterance(
-          shortText
-        );
-
-      // 🔥 SETTINGS
-      utterance.lang =
-       navigator.language ||
-        "en-US";
-
-      utterance.rate =
-        0.88;
-
-      utterance.pitch =
-        1.02;
-
-      utterance.volume =
-        1;
-
-      // 🔥 AVAILABLE VOICES
-      const voices =
-        speechSynthesis.getVoices();
-
-      // 🔥 BEST FEMALE VOICE
-      const femaleVoice =
-
-  voices.find(
-    (voice) =>
-      voice.name.includes(
-        "Microsoft Zira"
-      )
-  ) ||
-
-  voices.find(
-    (voice) =>
-      voice.name.includes(
-        "Google UK English Female"
-      )
-  ) ||
-
-  voices.find(
-    (voice) =>
-      voice.name.includes(
-        "Samantha"
-      )
-  ) ||
-
-  voices.find(
-    (voice) =>
-      voice.name.includes(
-        "Female"
-      )
-  ) ||
-
-  voices[0];
-
-      // 🔥 APPLY VOICE
-      if (femaleVoice) {
-
-        utterance.voice =
-          femaleVoice;
-
-        console.log(
-          "VOICE:",
-          femaleVoice.name
-        );
-      }
-
-      // 🔥 PLAY
-      speechSynthesis.speak(
-        utterance
-      );
-
-    } catch (error) {
-
-      console.log(
-        "VOICE ERROR:",
-        error
-      );
-    }
-  };
-
-  // ==============================
-  // AUTO WELCOME
-  // ==============================
-
-  useEffect(() => {
-
-    let welcomed =
-      false;
-
-    const startWelcome =
-      async () => {
-
-        if (
-          welcomed
-        ) return;
-
-        welcomed = true;
-
-        setTimeout(() => {
-
-          speak(
-            "Welcome to Next AI Digital. How can I help you today?"
-          );
-
-        }, 1200);
-      };
-
-    document.addEventListener(
-      "touchstart",
-      startWelcome,
-      { once: true }
-    );
-
-    document.addEventListener(
-      "mousemove",
-      startWelcome,
-      { once: true }
-    );
-
-    document.addEventListener(
-      "click",
-      startWelcome,
-      { once: true }
-    );
-
-    return () => {
-
-      document.removeEventListener(
-        "touchstart",
-        startWelcome
-      );
-
-      document.removeEventListener(
-        "mousemove",
-        startWelcome
-      );
-
-      document.removeEventListener(
-        "click",
-        startWelcome
-      );
-    };
-
-  }, []);
-
-  // ==============================
   // SEND MESSAGE
   // ==============================
 
@@ -303,7 +123,7 @@ export default function ChatBot() {
 
       try {
 
-        // 🔥 API CALL
+        // 🔥 CHAT API
         const res =
           await fetch(
             "/api/chat",
@@ -331,39 +151,75 @@ export default function ChatBot() {
           await res.json();
 
         const reply =
-          data.reply ||
 
-            data?.error ||
+          data?.reply ||
 
-             data?.error ||
-            "AI unavailable 😔";
+          data?.error ||
+
+          "AI unavailable 😔";
 
         const botMsg = {
           role: "bot",
           text: reply,
         };
 
-        // 🔥 VOICE
-        try {
-
-          await speak(
-            reply
-          );
-
-        } catch {
-
-          console.log(
-            "VOICE SKIPPED"
-          );
-        }
-
-        // 🔥 SHOW BOT
+        // 🔥 SHOW BOT MESSAGE
         setMessages(
           (prev) => [
             ...prev,
             botMsg,
           ]
         );
+
+        // 🔥 GROQ VOICE
+        try {
+
+          const voiceRes =
+            await fetch(
+              "/api/voice",
+              {
+                method: "POST",
+
+                headers: {
+                  "Content-Type":
+                    "application/json",
+                },
+
+                body:
+                  JSON.stringify({
+                    text:
+                      reply,
+                  }),
+              }
+            );
+
+          if (
+            voiceRes.ok
+          ) {
+
+            const audioBlob =
+              await voiceRes.blob();
+
+            const audioUrl =
+              URL.createObjectURL(
+                audioBlob
+              );
+
+            const audio =
+              new Audio(
+                audioUrl
+              );
+
+            audio.play();
+          }
+
+        } catch (error) {
+
+          console.log(
+            "VOICE ERROR:",
+            error
+          );
+        }
 
       } catch (error) {
 
@@ -462,10 +318,6 @@ export default function ChatBot() {
 
           setLoading(
             false
-          );
-
-          speak(
-            "Sorry, please try again."
           );
         };
 
