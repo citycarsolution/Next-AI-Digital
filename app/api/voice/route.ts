@@ -78,15 +78,15 @@ export async function POST(req: Request) {
           body:
             JSON.stringify({
 
-              model_id:
-                "sonic-english",
+             model_id:
+  "sonic-3.5",
 
               transcript:
                 shortText,
 
               voice: {
                 mode: "id",
-                id: "694f9389-aac1-45b6-b726-9d9369183238",
+                id: "faf0731e-dfb9-4cfc-8119-259a79b27e12",
               },
 
               output_format: {
