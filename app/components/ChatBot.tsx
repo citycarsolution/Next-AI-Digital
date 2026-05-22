@@ -25,22 +25,17 @@ export default function ChatBot() {
     useState(false);
 
   const [messages, setMessages] =
-    useState([
+    useState<any[]>([
       {
         role: "bot",
         text:
-          "Welcome 👋 How can I help you?",
+          "Hi 👋 Welcome to Next AI Digital. How can I help you today?",
       },
     ]);
 
   // ==============================
   // REFS
   // ==============================
-
-  const currentAudio =
-    useRef<HTMLAudioElement | null>(
-      null
-    );
 
   const messagesEndRef =
     useRef<HTMLDivElement | null>(
@@ -100,134 +95,101 @@ export default function ChatBot() {
 
     try {
 
+      // 🔥 STOP OLD VOICE
+      speechSynthesis.cancel();
+
+      // 🔥 CLEAN TEXT
       const cleanText =
         text
-
           .replace(/\*\*/g, "")
           .replace(/\*/g, "")
           .replace(/#/g, "")
           .replace(/```/g, "")
           .replace(/`/g, "")
-
-          // REMOVE EMOJIS
-          .replace(
-            /[\u{1F600}-\u{1F64F}]/gu,
-            ""
-          )
-
-          .replace(
-            /[\u{1F300}-\u{1F5FF}]/gu,
-            ""
-          )
-
-          .replace(
-            /[\u{1F680}-\u{1F6FF}]/gu,
-            ""
-          )
-
-          .replace(
-            /[\u{2600}-\u{26FF}]/gu,
-            ""
-          )
-
-          .replace(
-            /[\u{2700}-\u{27BF}]/gu,
-            ""
-          )
-
-          // REMOVE INVALID UTF
-          .replace(
-            /[\uD800-\uDFFF]/g,
-            ""
-          )
-
-          // CLEAN SYMBOLS
-          .replace(
-            /[^\x00-\x7F\u0900-\u097F\s.,!?₹()-]/g,
-            ""
-          )
-
           .replace(/\n/g, " ")
-
           .replace(/\s+/g, " ")
-
           .trim();
 
-      const res =
-        await fetch(
-          "/api/voice",
-          {
-            method:
-              "POST",
+      // 🔥 SHORT RESPONSE
+      const shortText =
+        cleanText
+          .split(".")
+          .slice(0, 2)
+          .join(".");
 
-            headers: {
-              "Content-Type":
-                "application/json",
-            },
-
-            body:
-              JSON.stringify({
-                text:
-                  cleanText,
-              }),
-          }
+      // 🔥 CREATE VOICE
+      const utterance =
+        new SpeechSynthesisUtterance(
+          shortText
         );
 
-      if (!res.ok) {
+      // 🔥 SETTINGS
+      utterance.lang =
+       navigator.language ||
+        "en-US";
+
+      utterance.rate =
+        0.88;
+
+      utterance.pitch =
+        1.02;
+
+      utterance.volume =
+        1;
+
+      // 🔥 AVAILABLE VOICES
+      const voices =
+        speechSynthesis.getVoices();
+
+      // 🔥 BEST FEMALE VOICE
+      const femaleVoice =
+
+  voices.find(
+    (voice) =>
+      voice.name.includes(
+        "Microsoft Zira"
+      )
+  ) ||
+
+  voices.find(
+    (voice) =>
+      voice.name.includes(
+        "Google UK English Female"
+      )
+  ) ||
+
+  voices.find(
+    (voice) =>
+      voice.name.includes(
+        "Samantha"
+      )
+  ) ||
+
+  voices.find(
+    (voice) =>
+      voice.name.includes(
+        "Female"
+      )
+  ) ||
+
+  voices[0];
+
+      // 🔥 APPLY VOICE
+      if (femaleVoice) {
+
+        utterance.voice =
+          femaleVoice;
 
         console.log(
-          "VOICE API FAILED"
-        );
-
-        return;
-      }
-
-      const audioBlob =
-        await res.blob();
-
-      const audioUrl =
-        URL.createObjectURL(
-          audioBlob
-        );
-
-      const audio =
-        new Audio(
-          audioUrl
-        );
-
-      // STOP OLD AUDIO
-      if (
-        currentAudio.current
-      ) {
-
-        currentAudio.current.pause();
-
-        currentAudio.current.currentTime =
-          0;
-      }
-
-      currentAudio.current =
-        audio;
-
-      audio.volume = 1;
-
-      audio.muted = false;
-
-      try {
-
-        await audio.play();
-
-        console.log(
-          "VOICE PLAYING 😍"
-        );
-
-      } catch (err) {
-
-        console.log(
-          "AUDIO PLAY ERROR:",
-          err
+          "VOICE:",
+          femaleVoice.name
         );
       }
+
+      // 🔥 PLAY
+      speechSynthesis.speak(
+        utterance
+      );
 
     } catch (error) {
 
@@ -330,7 +292,7 @@ export default function ChatBot() {
         userMsg,
       ];
 
-      // SHOW USER MESSAGE
+      // 🔥 SHOW USER MESSAGE
       setMessages(
         newMessages
       );
@@ -341,10 +303,7 @@ export default function ChatBot() {
 
       try {
 
-        // ==============================
-        // CHAT API
-        // ==============================
-
+        // 🔥 API CALL
         const res =
           await fetch(
             "/api/chat",
@@ -373,93 +332,34 @@ export default function ChatBot() {
 
         const reply =
           data.reply ||
-          "AI unavailable 😔";
 
-        // ==============================
-        // LEAD DETECTION
-        // ==============================
+            data?.error ||
 
-        const hasPhone =
-          /\d{10}/.test(
-            msg
-          );
-
-        const hasEmail =
-          msg.includes(
-            "@"
-          );
-
-        const seriousKeywords = [
-          "website",
-          "app",
-          "seo",
-          "crm",
-          "automation",
-          "business",
-          "booking",
-          "dashboard",
-          "software",
-          "ecommerce",
-          "budget",
-        ];
-
-        const isInterested =
-          seriousKeywords.some(
-            (k) =>
-              msg
-                .toLowerCase()
-                .includes(k)
-          );
-
-        // SEND LEAD
-        if (
-          (
-            hasPhone ||
-            hasEmail
-          ) &&
-          isInterested
-        ) {
-
-          await fetch(
-            "/api/send-lead",
-            {
-              method:
-                "POST",
-
-              headers: {
-                "Content-Type":
-                  "application/json",
-              },
-
-              body:
-                JSON.stringify({
-                  message:
-                    msg,
-
-                  aiReply:
-                    reply,
-                }),
-            }
-          );
-        }
-
-        // ==============================
-        // BOT MESSAGE
-        // ==============================
+             data?.error ||
+            "AI unavailable 😔";
 
         const botMsg = {
           role: "bot",
           text: reply,
         };
 
-        // VOICE
-        await speak(
-          reply
-        );
+        // 🔥 VOICE
+        try {
 
-        // SHOW BOT MESSAGE
+          await speak(
+            reply
+          );
+
+        } catch {
+
+          console.log(
+            "VOICE SKIPPED"
+          );
+        }
+
+        // 🔥 SHOW BOT
         setMessages(
-          (prev: any) => [
+          (prev) => [
             ...prev,
             botMsg,
           ]
@@ -473,7 +373,7 @@ export default function ChatBot() {
         );
 
         setMessages(
-          (prev: any) => [
+          (prev) => [
             ...prev,
             {
               role: "bot",
@@ -510,7 +410,7 @@ export default function ChatBot() {
       ) {
 
         alert(
-          "Please use Chrome Browser 😄"
+          "Please use Google Chrome 😄"
         );
 
         return;
@@ -536,14 +436,6 @@ export default function ChatBot() {
 
       setLoading(true);
 
-      recognition.onstart =
-        () => {
-
-          console.log(
-            "🎤 Listening..."
-          );
-        };
-
       recognition.onresult =
         async (
           event: any
@@ -552,11 +444,6 @@ export default function ChatBot() {
           const text =
             event.results[0][0]
               .transcript;
-
-          console.log(
-            "USER:",
-            text
-          );
 
           await sendMessage(
             text
@@ -587,10 +474,6 @@ export default function ChatBot() {
 
           setLoading(
             false
-          );
-
-          console.log(
-            "🎤 Voice Ended"
           );
         };
     };
@@ -648,7 +531,7 @@ export default function ChatBot() {
             ${
               isMobile
                 ? "bottom-16 right-3 left-3 h-[70vh]"
-                : "bottom-20 right-6 w-[320px] h-[520px]"
+                : "bottom-20 right-6 w-[340px] h-[540px]"
             }
           `}
         >
@@ -704,7 +587,7 @@ export default function ChatBot() {
 
             {messages.map(
               (
-                m: any,
+                m,
                 i
               ) => (
 
@@ -848,11 +731,7 @@ export default function ChatBot() {
 
             {/* WHATSAPP */}
             <a
-              href={
-                process.env
-                  .NEXT_PUBLIC_WHATSAPP ||
-                "https://wa.me/919082552031"
-              }
+              href="https://wa.me/919082552031"
               target="_blank"
               className="
                 block

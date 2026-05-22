@@ -8,39 +8,67 @@ import ChatBot from "./components/ChatBot";
 import ContactForm from "./components/ContactForm";
 
 export default function Home() {
+
   return (
+
     <main className="w-full overflow-x-hidden bg-black text-white">
 
+      {/* HERO */}
       <Hero />
+
+      {/* SERVICES */}
       <Services />
+
+      {/* ABOUT */}
       <About />
+
+      {/* PORTFOLIO */}
       <Portfolio />
+
+      {/* PRICING */}
       <Pricing />
+
+      {/* TESTIMONIALS */}
       <Testimonials />
+
+      {/* CONTACT */}
       <ContactForm />
+
+      {/* CHATBOT */}
       <ChatBot />
 
-      {/* CTA */}
-      <section className="py-20 text-center">
-        <h2 className="text-3xl font-bold mb-4">
+      {/* CTA SECTION */}
+      <section className="py-20 px-6 text-center">
+
+        <h2 className="text-3xl md:text-5xl font-extrabold mb-6">
           Ready to Grow Your Business? 🚀
         </h2>
 
+        <p className="text-gray-400 mb-8 max-w-2xl mx-auto">
+          Get a premium AI powered website, app or SEO solution
+          for your business today.
+        </p>
+
         <a
           href="https://wa.me/919082552031"
+          target="_blank"
           className="
             inline-block
             bg-green-500
             hover:bg-green-600
-            transition
-            px-6
-            py-3
-            rounded-xl
+            transition-all
+            px-8
+            py-4
+            rounded-2xl
             font-semibold
+            text-lg
+            shadow-2xl
+            hover:scale-105
           "
         >
-          Chat on WhatsApp
+          Chat on WhatsApp 💬
         </a>
+
       </section>
 
     </main>

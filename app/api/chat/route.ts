@@ -1,16 +1,33 @@
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
+
   try {
 
     // ==============================
     // BODY
     // ==============================
 
-    const {
-      message,
-      messages,
-    } = await req.json();
+    const body =
+      await req.json();
+
+    const message =
+      body?.message || "";
+
+    const messages =
+      body?.messages || [];
+
+    // ==============================
+    // EMPTY MESSAGE
+    // ==============================
+
+    if (!message.trim()) {
+
+      return NextResponse.json({
+        reply:
+          "Please enter a message 😊",
+      });
+    }
 
     // ==============================
     // SYSTEM PROMPT
@@ -21,63 +38,132 @@ You are Next AI Digital Assistant.
 
 Founder: Mukesh.
 
-You are a smart, human-like female AI consultant for a premium digital agency.
+You are a smart, premium, human-like female AI business consultant for a premium corporate digital agency.
 
-Languages:
+━━━━━━━━━━━━━━━
+
+LANGUAGES:
+
+You naturally speak:
 - Hindi
 - English
 - Hinglish
 - Urdu
 - Marathi
 
-Reply naturally in the user's language.
+Always reply naturally in the user's language.
 
-You ONLY help with:
+Do NOT translate replies into multiple languages.
+
+Reply only in the language the user is using.
+
+If the user speaks English:
+reply only in English.
+
+If the user speaks Hindi:
+reply only in Hindi/Hinglish naturally.
+
+Avoid unnecessary translations in brackets.
+
+━━━━━━━━━━━━━━━
+
+YOU HELP WITH:
+
 - websites
-- mobile apps
-- AI chatbots
+- web applications
+- mobile applications
+- AI automation
 - CRM systems
+- dashboards
 - SEO
 - branding
-- automation
-- dashboards
-- e-commerce
+- digital marketing
+- Google Ads
+- social media marketing
+- lead generation
+- WhatsApp automation
+- AI chatbots
 - software development
 
-Your personality:
+Politely avoid unrelated topics.
+
+━━━━━━━━━━━━━━━
+
+YOUR PERSONALITY:
+
 - smart
-- professional
-- friendly
 - premium
+- professional
+- confident
+- emotionally intelligent
 - human-like
+- business-focused
 
-Your goal:
-- understand business needs
-- explain features professionally
-- explain pricing realistically
-- build trust naturally
-- convert leads
+Behave like:
+- premium business consultant
+- corporate digital strategist
+- experienced sales closer
 
-Pricing:
-- Basic Website: ₹5k–10k
-- Professional Website: ₹15k–25k
-- Growth Website: ₹25k–45k
-- Premium Systems: ₹45k+
+NOT:
+- robotic chatbot
+- support agent
 
-IMPORTANT:
-Do NOT instantly ask for contact details.
+━━━━━━━━━━━━━━━
+
+IMPORTANT RULES:
+
+- Keep replies short
+- Keep replies premium
+- Explain professionally
+- Avoid robotic replies
+- Avoid huge paragraphs
+- Sound confident
+- Build trust naturally
+
+━━━━━━━━━━━━━━━
+
+PRICING & TIMELINES:
+
+Basic Website:
+₹5k–10k
+Timeline:
+24 hours
+
+Professional Website:
+₹10k–25k
+Timeline:
+1–3 days
+
+Growth Website:
+₹25k–45k
+Timeline:
+5–10 days
+
+Premium Systems:
+₹45k+
+
+━━━━━━━━━━━━━━━
+
+IMPORTANT CONTACT RULE:
+
+Do NOT instantly ask:
+- phone number
+- Gmail
+- city
 
 First:
-- discuss business
+- discuss project
 - explain features
-- explain branding value
-- explain automation benefits
-- answer questions naturally
+- explain pricing
+- explain timelines
+- build trust
 
-Only AFTER proper discussion,
-generate:
+━━━━━━━━━━━━━━━
 
 FINAL PROJECT SUMMARY:
+
+Only AFTER proper conversation generate:
+
 - Name
 - Mobile Number
 - Gmail
@@ -85,22 +171,42 @@ FINAL PROJECT SUMMARY:
 - Business Name
 - Service Type
 - Budget
+- Timeline
 - Final Requirements
 
 Then say:
-"Perfect 😊 Developer aapse jaldi contact karenge."
 
-Keep replies:
-- short
-- smart
-- premium
-- conversational
+"Perfect 😊
+Developer aapse jaldi contact karenge."
+
+━━━━━━━━━━━━━━━
+
+STRICT RULES:
+
+Do NOT answer:
+- politics
+- religion
+- adult topics
+- celebrity gossip
+
+Politely redirect toward business services.
+
+━━━━━━━━━━━━━━━
 
 If user asks:
 "Who developed you?"
 
 Reply:
 "I was developed by Mukesh, founder of Next AI Digital."
+
+━━━━━━━━━━━━━━━
+
+MAIN GOAL:
+
+- build trust
+- create premium impression
+- emotionally engage users
+- convert quality leads
 `;
 
     // ==============================
@@ -108,16 +214,23 @@ Reply:
     // ==============================
 
     const recentMessages =
+
       messages
-        ?.slice(-6)
+        ?.slice(-4)
+
         ?.map((m: any) => ({
-          role: m.role || "user",
+          role:
+            m.role === "bot"
+              ? "assistant"
+              : "user",
+
           content:
             m.text ||
             m.content ||
             "",
         }))
-        ?.filter((m: any) => m.content) || [];
+
+        || [];
 
     // ==============================
     // TIMEOUT
@@ -128,84 +241,102 @@ Reply:
 
     const timeout =
       setTimeout(() => {
+
         controller.abort();
+
       }, 15000);
 
     // ==============================
-    // OPENROUTER API
+    // GROQ API
     // ==============================
 
-    const response = await fetch(
-      "https://openrouter.ai/api/v1/chat/completions",
-      {
-        method: "POST",
+    const response =
+      await fetch(
 
-        signal: controller.signal,
+        "https://api.groq.com/openai/v1/chat/completions",
 
-        headers: {
-          Authorization:
-            `Bearer ${process.env.OPENROUTER_API_KEY}`,
+        {
+          method: "POST",
 
-          "Content-Type":
-            "application/json",
+          signal:
+            controller.signal,
 
-          "HTTP-Referer":
-            "http://localhost:3000",
+          headers: {
 
-          "X-Title":
-            "Next AI Digital",
-        },
+            Authorization:
+              `Bearer ${process.env.GROQ_API_KEY}`,
 
-        body: JSON.stringify({
+            "Content-Type":
+              "application/json",
+          },
 
-          // 🔥 BEST FAST MODEL
-          model:
-            "google/gemini-2.0-flash-lite-001",
+          body:
+            JSON.stringify({
 
-          max_tokens: 250,
+              model:
+                "llama-3.3-70b-versatile",
 
-          temperature: 0.7,
+              messages: [
 
-          top_p: 0.9,
+                {
+                  role: "system",
+                  content:
+                    systemPrompt,
+                },
 
-          frequency_penalty: 0.2,
+                ...recentMessages,
 
-          presence_penalty: 0.2,
+                {
+                  role: "user",
+                  content:
+                    message,
+                },
+              ],
 
-          messages: [
+              temperature:
+                0.7,
 
-            {
-              role: "system",
-              content: systemPrompt,
-            },
+              max_tokens:
+                220,
+            }),
+        }
+      );
 
-            ...recentMessages,
-
-            {
-              role: "user",
-              content: message,
-            },
-          ],
-        }),
-      }
-    );
+    // ==============================
+    // CLEAR TIMEOUT
+    // ==============================
 
     clearTimeout(timeout);
 
     // ==============================
-    // RESPONSE
+    // API ERROR
+    // ==============================
+
+    if (!response.ok) {
+
+      const errorText =
+        await response.text();
+
+      console.log(
+        "GROQ ERROR:",
+        errorText
+      );
+
+      return NextResponse.json({
+        reply:
+          "Server busy hai 😔 Please thodi der baad try kare.",
+      });
+    }
+
+    // ==============================
+    // RESPONSE DATA
     // ==============================
 
     const data =
       await response.json();
 
     console.log(
-      "STATUS:",
-      response.status
-    );
-
-    console.log(
-      "FULL RESPONSE:",
+      "GROQ RESPONSE:",
       JSON.stringify(
         data,
         null,
@@ -214,17 +345,16 @@ Reply:
     );
 
     // ==============================
-    // SAFE REPLY EXTRACT
+    // SAFE REPLY
     // ==============================
 
     const reply =
-      data?.choices?.[0]
-        ?.message?.content ||
 
       data?.choices?.[0]
-        ?.text ||
+        ?.message?.content
+        ?.trim()
 
-      "";
+      || "";
 
     console.log(
       "AI REPLY:",
@@ -239,7 +369,7 @@ Reply:
 
       return NextResponse.json({
         reply:
-          "AI reply empty aa raha hai 😔",
+          "AI unavailable 😔",
       });
     }
 
