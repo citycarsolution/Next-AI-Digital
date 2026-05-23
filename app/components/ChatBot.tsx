@@ -383,7 +383,7 @@ export default function ChatBot() {
             ${
               isMobile
                 ? "bottom-16 right-3 left-3 h-[70vh]"
-                : "bottom-20 right-6 w-[340px] h-[540px]"
+                : "bottom-20 right-6 w-[440px] h-[440px]"
             }
           `}
         >
