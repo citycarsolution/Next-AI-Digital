@@ -6,6 +6,7 @@ import Portfolio from "./components/Portfolio";
 import Testimonials from "./components/Testimonials";
 import ChatBot from "./components/ChatBot";
 import ContactForm from "./components/ContactForm";
+import DigitalMarketingPricing from "./components/DigitalMarketingPricing";
 
 export default function Home() {
 
@@ -25,8 +26,11 @@ export default function Home() {
       {/* PORTFOLIO */}
       <Portfolio />
 
-      {/* PRICING */}
+      {/* WEBSITE PRICING */}
       <Pricing />
+
+      {/* DIGITAL MARKETING PRICING */}
+      <DigitalMarketingPricing />
 
       {/* TESTIMONIALS */}
       <Testimonials />
@@ -45,12 +49,12 @@ export default function Home() {
         </h2>
 
         <p className="text-gray-400 mb-8 max-w-2xl mx-auto">
-          Get a premium AI powered website, app or SEO solution
-          for your business today.
+          Get a premium AI powered website, app, CRM,
+          automation or digital marketing solution for your business.
         </p>
 
         <a
-          href="https://wa.me/919082552031"
+          href="https://wa.me/919082552031?text=Hi%20Next%20AI%20Digital,%20I%20want%20to%20grow%20my%20business%20with%20a%20website,%20AI%20automation,%20CRM%20or%20digital%20marketing"
           target="_blank"
           className="
             inline-block
